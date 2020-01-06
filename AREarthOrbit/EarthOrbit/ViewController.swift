@@ -48,8 +48,10 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let configuration = ARWorldTrackingConfiguration()
-        sceneView.session.run(configuration)
+        let config = ARWorldTrackingConfiguration()
+        config.environmentTexturing = .automatic
+        config.isLightEstimationEnabled = true
+        sceneView.session.run(config)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
