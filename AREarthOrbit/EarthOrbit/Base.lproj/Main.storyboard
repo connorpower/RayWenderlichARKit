@@ -10,7 +10,7 @@
         <!--View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="ARPokerDice" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="EarthOrbit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="U0K-SW-4ec">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -18,88 +18,18 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                             </arscnView>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l6x-M0-U1V">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="94"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="doA-P7-EGH">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="94"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjr-am-3B4">
-                                            <rect key="frame" x="0.0" y="44" width="414" height="50"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WWM-oe-E0U" userLabel="StatusLabel">
-                                                    <rect key="frame" x="8" y="0.0" width="398" height="50"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="WWM-oe-E0U" firstAttribute="top" secondItem="Qjr-am-3B4" secondAttribute="top" id="SeT-ql-evw"/>
-                                                <constraint firstAttribute="bottom" secondItem="WWM-oe-E0U" secondAttribute="bottom" id="TIV-4M-bji"/>
-                                                <constraint firstItem="WWM-oe-E0U" firstAttribute="leading" secondItem="Qjr-am-3B4" secondAttribute="leading" constant="8" id="TPw-0M-ZBC"/>
-                                                <constraint firstAttribute="trailing" secondItem="WWM-oe-E0U" secondAttribute="trailing" constant="8" id="cX0-44-6DN"/>
-                                                <constraint firstAttribute="height" constant="50" id="eRB-2I-eOz"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="Qjr-am-3B4" secondAttribute="bottom" id="JcY-2C-qEh"/>
-                                        <constraint firstAttribute="trailing" secondItem="Qjr-am-3B4" secondAttribute="trailing" id="UTc-Q0-4hQ"/>
-                                        <constraint firstItem="Qjr-am-3B4" firstAttribute="leading" secondItem="doA-P7-EGH" secondAttribute="leading" id="x6d-A7-OcR"/>
-                                    </constraints>
-                                </view>
-                                <blurEffect style="regular"/>
-                            </visualEffectView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bgU-dg-2c1" userLabel="StyleButton">
-                                <rect key="frame" x="16" y="102" width="60" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="0.25" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="LEc-ZM-Clb"/>
-                                    <constraint firstAttribute="height" constant="40" id="Qsl-uM-JbQ"/>
-                                </constraints>
-                                <state key="normal" title="STYLE">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="styleButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="I3o-kw-0jV"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rgc-Iz-6zG" userLabel="ResetButton">
-                                <rect key="frame" x="338" y="102" width="60" height="40"/>
-                                <color key="backgroundColor" white="1" alpha="0.25" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="RESET">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="resetButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="jJy-eL-nMw"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="l6x-M0-U1V" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="55V-PB-oNk"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
-                            <constraint firstItem="l6x-M0-U1V" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="50" id="IgI-de-RSE"/>
-                            <constraint firstItem="l6x-M0-U1V" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="NL0-Ad-aWZ"/>
-                            <constraint firstItem="Rgc-Iz-6zG" firstAttribute="height" secondItem="bgU-dg-2c1" secondAttribute="height" id="QzY-8V-QyJ"/>
-                            <constraint firstItem="bgU-dg-2c1" firstAttribute="top" secondItem="l6x-M0-U1V" secondAttribute="bottom" constant="8" id="Utc-7B-nsw"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
-                            <constraint firstItem="bgU-dg-2c1" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="16" id="Vxe-ch-5s7"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
-                            <constraint firstItem="Rgc-Iz-6zG" firstAttribute="width" secondItem="bgU-dg-2c1" secondAttribute="width" id="bzn-Mh-BAI"/>
-                            <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="Rgc-Iz-6zG" secondAttribute="trailing" constant="16" id="e3X-da-Mvi"/>
-                            <constraint firstItem="Rgc-Iz-6zG" firstAttribute="top" secondItem="bgU-dg-2c1" secondAttribute="top" id="kfk-KX-UPB"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
-                            <constraint firstItem="l6x-M0-U1V" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="vO7-2w-tZj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
-                        <outlet property="resetButton" destination="Rgc-Iz-6zG" id="2Vs-7C-xO5"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
-                        <outlet property="statusLabel" destination="WWM-oe-E0U" id="IaW-qP-N2F"/>
-                        <outlet property="styleButton" destination="bgU-dg-2c1" id="Txh-ZT-ln7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
