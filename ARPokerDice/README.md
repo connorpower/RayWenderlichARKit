@@ -14,5 +14,5 @@ horizontal plane. Rendering and physics simulations are performed by SceneKit
 
 ## Example
 
-![Example](docs/example.jpeg)
+<img src="https://github.com/connorpower/ARPokerDice/blob/master/docs/example.jpeg" width="300px" />
 
