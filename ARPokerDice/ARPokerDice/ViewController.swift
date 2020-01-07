@@ -258,38 +258,37 @@ class ViewController: UIViewController {
     }
 
     private func createARPlaneNode(planeAnchor: ARPlaneAnchor, color: UIColor) -> SCNNode {
-        let planeGeometry = ARSCNPlaneGeometry(device: MTLCreateSystemDefaultDevice()!)!
-        planeGeometry.update(from: planeAnchor.geometry)
+        let planeGeometry = SCNPlane(width: CGFloat(planeAnchor.extent.x), height: CGFloat(planeAnchor.extent.z))
         let planeMaterial = SCNMaterial()
         planeMaterial.diffuse.contents = "PokerDice.scnassets/Textures/Surface_DIFFUSE.png"
         planeGeometry.materials = [planeMaterial]
 
         let planeNode = SCNNode(geometry: planeGeometry)
-        planeNode.physicsBody = createARPlanePhysics(geometry: planeAnchor.geometry)
+        planeNode.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
+        planeNode.transform = SCNMatrix4MakeRotation(-Float.pi / 2, 1, 0, 0)
+        planeNode.physicsBody = createARPlanePhysics(geometry: planeGeometry)
 
         return planeNode
     }
 
-    private func createARPlanePhysics(geometry: ARPlaneGeometry) -> SCNPhysicsBody {
-        let planeGeometry = ARSCNPlaneGeometry(device: MTLCreateSystemDefaultDevice()!)!
-        planeGeometry.update(from: geometry)
-
-        let shape = SCNPhysicsShape(geometry: planeGeometry, options: [.type: SCNPhysicsShape.ShapeType.boundingBox])
-        let physicsBody = SCNPhysicsBody(type: .kinematic, shape: shape)
-        physicsBody.restitution = 0.4
-        physicsBody.friction = 0.6
+    private func createARPlanePhysics(geometry: SCNGeometry) -> SCNPhysicsBody {
+        let physicsBody = SCNPhysicsBody(type: .kinematic,
+                                         shape: SCNPhysicsShape(geometry: geometry, options: nil))
+        physicsBody.restitution = 0.5
+        physicsBody.friction = 0.5
 
         return physicsBody
     }
 
     private func updateARSurfaceNode(node: SCNNode, planeAnchor: ARPlaneAnchor) {
-        if let planeGeometry = node.geometry as? ARSCNPlaneGeometry {
-            planeGeometry.update(from: planeAnchor.geometry)
-            node.physicsBody = nil
-            node.physicsBody = createARPlanePhysics(geometry: planeAnchor.geometry)
-        }
+        let planeGeometry = node.geometry as! SCNPlane
+        planeGeometry.width = CGFloat(planeAnchor.extent.x)
+        planeGeometry.height = CGFloat(planeAnchor.extent.z)
 
-        node.position = SCNVector3(planeAnchor.center)
+        node.position = SCNVector3Make(planeAnchor.center.x, 0, planeAnchor.center.z)
+
+        node.physicsBody = nil
+        node.physicsBody = createARPlanePhysics(geometry: planeGeometry)
     }
 
     private func removeARPlaneNode(planeNode: SCNNode) {
