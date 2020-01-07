@@ -40,6 +40,10 @@ class ViewController: UIViewController {
         case swipeToPlay
     }
 
+    private struct Constants {
+        static let diceSide: CGFloat = 0.07
+    }
+
     // MARK: - Properties
 
     private var gameState = GameState.detectSurface
@@ -132,6 +136,7 @@ class ViewController: UIViewController {
         scene.isPaused = false
         sceneView.scene = scene
         scene.physicsWorld.timeStep = 1.0 / 60.0
+        scene.physicsWorld.speed = 1.0
     }
 
     func initARSession() {
@@ -221,6 +226,7 @@ class ViewController: UIViewController {
                                    -(distance * 2) * (cameraTransform.m32 - .pi / 8.0),
                                    -(distance * 2) * cameraTransform.m33)
         diceNode.physicsBody?.resetTransform()
+        diceNode.physicsBody?.continuousCollisionDetectionThreshold = Constants.diceSide / 10
         diceNode.physicsBody?.applyForce(direction, asImpulse: true)
 
         sceneView.scene.rootNode.addChildNode(diceNode)
