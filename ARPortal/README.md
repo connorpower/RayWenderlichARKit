@@ -14,4 +14,5 @@ newer RealityKit).
 
 ## Example
 
-![example](docs/example.jpeg)
+<img src="https://github.com/connorpower/ARPortal/raw/2fb65fc89b0dad8c935193c8b414d2b2a4aedf32/docs/example.jpeg" width="300px" />
+
