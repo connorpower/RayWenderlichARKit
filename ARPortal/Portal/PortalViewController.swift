@@ -34,16 +34,11 @@ class PortalViewController: UIViewController {
     // MARK: - Setup
 
     private func runSession() {
-        guard ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth) else {
-            fatalError("People occlusion is not supported on this device")
-        }
-
         let config = ARWorldTrackingConfiguration()
         
         config.planeDetection = .horizontal
         config.isLightEstimationEnabled = true
         config.worldAlignment = .gravity
-        config.frameSemantics.insert(.personSegmentationWithDepth)
         sceneView?.session.run(config, options: [.resetTracking, .removeExistingAnchors])
 
         #if DEBUG
