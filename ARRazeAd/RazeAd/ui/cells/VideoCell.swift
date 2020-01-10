@@ -37,7 +37,7 @@ class VideoCell: UICollectionViewCell {
 
     private var isPlaying = false
     private var videoUrl: String!
-    private var player: AVPlayer!
+    private var player: AVPlayer?
 
     private weak var billboard: BillboardContainer?
     private weak var sceneView: ARSCNView?
@@ -68,7 +68,14 @@ class VideoCell: UICollectionViewCell {
         guard let billboard = billboard else { return }
 
         if billboard.isFullScreen {
-
+            if isPlaying {
+                stopVideo()
+                playButton.setImage(#imageLiteral(resourceName: "arKit-play"), for: .normal)
+            } else {
+                createVideoPlayerView()
+                playButton.setImage(#imageLiteral(resourceName: "arKit-pause"), for: .normal)
+            }
+            isPlaying.toggle()
         } else {
             createVideoPlayerAnchor()
             billboard.videoPlayerDelegate?.didStartPlay()
@@ -87,6 +94,23 @@ class VideoCell: UICollectionViewCell {
         sceneView.session.add(anchor: anchor)
 
         billboard.videoAnchor = anchor
+    }
+
+    private func stopVideo() {
+        player?.pause()
+    }
+
+    private func createVideoPlayerView() {
+        if player == nil {
+            guard let url = URL(string: videoUrl) else { return }
+
+            player = AVPlayer(url: url)
+            let layer = AVPlayerLayer(player: player)
+            layer.frame = playerContainer.bounds
+            playerContainer.layer.addSublayer(layer)
+        }
+
+        player?.play()
     }
 
 }

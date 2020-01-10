@@ -50,6 +50,74 @@ class BillboardViewController: UICollectionViewController {
     var sceneView: ARSCNView!
     var billboard: BillboardContainer!
 
+    // MARK: - Private Properties
+
+    private let doubleTapGesture = UITapGestureRecognizer()
+
+    private weak var mainViewController: UIViewController?
+    private weak var mainView: UIView?
+
+    // MARK: - View Controller Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        doubleTapGesture.numberOfTapsRequired = 2
+        doubleTapGesture.addTarget(self, action: #selector(didDoubleTap))
+        view.addGestureRecognizer(doubleTapGesture)
+    }
+
+    // MARK: - Gesture Recognizers
+
+    @objc private func didDoubleTap() {
+        guard let billboard = billboard else { return }
+
+        if billboard.isFullScreen {
+            restoreFromFullScreen()
+        } else {
+            showFullScreen()
+        }
+    }
+
+    // MARK: - Private Functions
+
+    private func showFullScreen() {
+        guard let billboard = billboard, !billboard.isFullScreen else { return }
+        guard let mainViewController = parent as? AdViewController else { return }
+
+        self.mainViewController = mainViewController
+        self.mainView = view.superview
+
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
+
+        willMove(toParent: mainViewController)
+        mainViewController.view.addSubview(view)
+        mainViewController.addChild(self)
+        didMove(toParent: mainViewController)
+
+        billboard.isFullScreen = true
+    }
+
+    private func restoreFromFullScreen() {
+        guard let billboard = billboard, billboard.isFullScreen else { return }
+        guard let mainViewController = mainViewController, let mainView = mainView else { return }
+
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
+
+        willMove(toParent: mainViewController)
+        mainView.addSubview(view)
+        mainViewController.addChild(self)
+        didMove(toParent: mainViewController)
+
+        billboard.isFullScreen = false
+        self.mainViewController = nil
+        self.mainView = nil
+    }
+
 }
 
 // MARK: - UICollectionViewDataSource
