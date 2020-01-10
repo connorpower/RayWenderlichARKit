@@ -35,7 +35,7 @@ struct BillboardContainer {
 
     var data: BillboardData
 
-    var billboardViewController: BillboardViewController?
+    var viewController: BillboardViewController?
     var plane: RectangularPlane
 
     var billboardAnchor: ARAnchor

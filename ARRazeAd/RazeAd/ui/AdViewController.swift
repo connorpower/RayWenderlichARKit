@@ -172,6 +172,34 @@ private extension AdViewController {
         print("New billboard created")
     }
 
+    private func createBillboardController() {
+        let navController = UIStoryboard(name: "Billboard",
+                                         bundle: .main).instantiateInitialViewController() as! UINavigationController
+
+        let billboardVC = navController.visibleViewController as! BillboardViewController
+
+        billboardVC.sceneView = sceneView
+        billboardVC.billboard = billboard
+
+        billboardVC.willMove(toParent: self)
+        addChild(billboardVC)
+        view.addSubview(billboardVC.view)
+        billboardVC.didMove(toParent: self)
+
+        show(viewController: billboardVC)
+    }
+
+    private func show(viewController: BillboardViewController) {
+        let material = SCNMaterial()
+        material.isDoubleSided = true
+        material.cullMode = .front
+
+        material.diffuse.contents = viewController.view
+
+        billboard?.viewController = viewController
+        billboard?.billboardNode?.geometry?.materials = [material]
+    }
+
     private func removeBillboard() {
         if let anchor = billboard?.billboardAnchor {
             sceneView.session.remove(anchor: anchor)
@@ -253,6 +281,7 @@ extension AdViewController: ARSCNViewDelegate {
             case (let billboardAnchor) where billboardAnchor == billboard.billboardAnchor:
                 DispatchQueue.main.sync {
                     node = addBillboardNode()
+                    self.createBillboardController()
                 }
             case (let videoAnchor) where videoAnchor == billboard.videoAnchor:
                 DispatchQueue.main.sync {

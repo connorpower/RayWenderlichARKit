@@ -32,13 +32,11 @@ import ARKit
 // MARK: - Enums
 
 private enum Section: Int {
-    case images = 1
     case video = 0
-    case webBrowser = 2
+    case images = 1
 }
 
 private enum Cell: String {
-    case cellWebBrowser
     case cellVideo
     case cellImage
 }
@@ -46,6 +44,62 @@ private enum Cell: String {
 // MARK: - BillboardViewController
 
 class BillboardViewController: UICollectionViewController {
+
+    // MARK: - Properties
+
+    var sceneView: ARSCNView!
+    var billboard: BillboardContainer!
+
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension BillboardViewController {
+
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 3
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let section = Section(rawValue: section) else { return 0 }
+
+        switch section {
+            case .images:
+                return billboard?.data.images.count ?? 0
+            case .video:
+                return 1
+        }
+    }
+
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let section = Section(rawValue: indexPath.section) else {
+            fatalError("Unexpected section")
+        }
+
+        let cellType: Cell
+        switch section {
+            case .images:
+                cellType = .cellImage
+            case .video:
+                cellType = .cellVideo
+        }
+
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.rawValue, for: indexPath)
+
+        switch cell {
+            case let imageCell as ImageCell:
+                let image = UIImage(named: billboard.data.images[indexPath.item])!
+                imageCell.show(image: image)
+            case let videoCell as VideoCell:
+                let videoURL = billboard.data.videoUrl
+                videoCell.configure(videoUrl: videoURL, sceneView: sceneView, billboard: billboard)
+            default:
+                fatalError("Unrecognized cell")
+        }
+
+        return cell
+    }
 
 }
 
