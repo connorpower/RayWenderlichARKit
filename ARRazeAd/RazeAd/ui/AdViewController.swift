@@ -186,17 +186,6 @@ private extension AdViewController {
         let rectangle = SCNPlane(width: billboard.plane.width, height: billboard.plane.height)
         let node = SCNNode(geometry: rectangle)
         node.name = "billboard"
-
-        let billboardViewController = BillboardViewController(nibName: "BillboardViewController", bundle: nil)
-        billboardViewController.images = billboard.data.images.map { UIImage(named: $0)! }
-        billboardViewController.delegate = self
-
-        let material = SCNMaterial()
-        material.diffuse.contents = billboardViewController.view
-        material.isDoubleSided = true
-
-        node.geometry?.firstMaterial = material
-        self.billboard?.billboardViewController = billboardViewController
         self.billboard?.billboardNode = node
 
         return node
@@ -292,16 +281,6 @@ extension AdViewController: ARSessionDelegate {
 
     func sessionInterruptionEnded(_ session: ARSession) {
         removeBillboard()
-    }
-
-}
-
-// MARK: - BillboardViewDelegate
-
-extension AdViewController: BillboardViewDelegate {
-
-    func billboardViewDidSelectPlayVideo(_ view: BillboardView) {
-        createVideo()
     }
 
 }

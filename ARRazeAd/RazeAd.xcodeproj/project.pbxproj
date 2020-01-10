@@ -15,12 +15,13 @@
 		57BB83641F8910DB00D14A14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57BB83631F8910DB00D14A14 /* Assets.xcassets */; };
 		57BB83671F8910DB00D14A14 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57BB83651F8910DB00D14A14 /* LaunchScreen.storyboard */; };
 		57CDBE0E1FD0D78D00D00F45 /* BillboardContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57CDBE0D1FD0D78D00D00F45 /* BillboardContainer.swift */; };
+		D201505B23C8C9E80017FC14 /* Billboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D201505723C8C9E80017FC14 /* Billboard.storyboard */; };
+		D201505C23C8C9E80017FC14 /* VideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201505923C8C9E80017FC14 /* VideoCell.swift */; };
+		D201505D23C8C9E80017FC14 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201505A23C8C9E80017FC14 /* ImageCell.swift */; };
 		D2D3A21F23C35ECC0008F615 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D3A21E23C35ECC0008F615 /* ARKit.framework */; };
 		D2D3A22123C35ED40008F615 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D3A22023C35ED40008F615 /* Vision.framework */; };
 		D2D3A22323C35EDA0008F615 /* SceneKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D3A22223C35EDA0008F615 /* SceneKit.framework */; };
 		D2D3A22723C5E71E0008F615 /* BillboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3A22423C5E71E0008F615 /* BillboardViewController.swift */; };
-		D2D3A22823C5E71E0008F615 /* BillboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3A22523C5E71E0008F615 /* BillboardView.swift */; };
-		D2D3A22923C5E71E0008F615 /* BillboardViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D3A22623C5E71E0008F615 /* BillboardViewController.xib */; };
 		D2D3A22B23C75EBF0008F615 /* BillboardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2D3A22A23C75EBF0008F615 /* BillboardData.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,12 +36,13 @@
 		57BB83661F8910DB00D14A14 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57BB83681F8910DB00D14A14 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		57CDBE0D1FD0D78D00D00F45 /* BillboardContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillboardContainer.swift; sourceTree = "<group>"; };
+		D201505723C8C9E80017FC14 /* Billboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Billboard.storyboard; sourceTree = "<group>"; };
+		D201505923C8C9E80017FC14 /* VideoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoCell.swift; sourceTree = "<group>"; };
+		D201505A23C8C9E80017FC14 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		D2D3A21E23C35ECC0008F615 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		D2D3A22023C35ED40008F615 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		D2D3A22223C35EDA0008F615 /* SceneKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SceneKit.framework; path = System/Library/Frameworks/SceneKit.framework; sourceTree = SDKROOT; };
 		D2D3A22423C5E71E0008F615 /* BillboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillboardViewController.swift; sourceTree = "<group>"; };
-		D2D3A22523C5E71E0008F615 /* BillboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillboardView.swift; sourceTree = "<group>"; };
-		D2D3A22623C5E71E0008F615 /* BillboardViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BillboardViewController.xib; sourceTree = "<group>"; };
 		D2D3A22A23C75EBF0008F615 /* BillboardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillboardData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,9 +63,9 @@
 		571390EC1F93C4EA00A6CDB0 /* ui */ = {
 			isa = PBXGroup;
 			children = (
-				D2D3A22523C5E71E0008F615 /* BillboardView.swift */,
+				D201505823C8C9E80017FC14 /* cells */,
 				D2D3A22423C5E71E0008F615 /* BillboardViewController.swift */,
-				D2D3A22623C5E71E0008F615 /* BillboardViewController.xib */,
+				D201505723C8C9E80017FC14 /* Billboard.storyboard */,
 				57BB83651F8910DB00D14A14 /* LaunchScreen.storyboard */,
 				57BB83601F8910DB00D14A14 /* Main.storyboard */,
 				57BB835E1F8910DB00D14A14 /* AdViewController.swift */,
@@ -127,6 +129,15 @@
 				571390EC1F93C4EA00A6CDB0 /* ui */,
 			);
 			path = RazeAd;
+			sourceTree = "<group>";
+		};
+		D201505823C8C9E80017FC14 /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				D201505923C8C9E80017FC14 /* VideoCell.swift */,
+				D201505A23C8C9E80017FC14 /* ImageCell.swift */,
+			);
+			path = cells;
 			sourceTree = "<group>";
 		};
 		D2D3A21D23C35ECB0008F615 /* Frameworks */ = {
@@ -201,7 +212,7 @@
 			files = (
 				57BB83671F8910DB00D14A14 /* LaunchScreen.storyboard in Resources */,
 				57BB83641F8910DB00D14A14 /* Assets.xcassets in Resources */,
-				D2D3A22923C5E71E0008F615 /* BillboardViewController.xib in Resources */,
+				D201505B23C8C9E80017FC14 /* Billboard.storyboard in Resources */,
 				57BB83621F8910DB00D14A14 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,11 +225,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2D3A22723C5E71E0008F615 /* BillboardViewController.swift in Sources */,
+				D201505C23C8C9E80017FC14 /* VideoCell.swift in Sources */,
+				D201505D23C8C9E80017FC14 /* ImageCell.swift in Sources */,
 				57CDBE0E1FD0D78D00D00F45 /* BillboardContainer.swift in Sources */,
 				57BB835F1F8910DB00D14A14 /* AdViewController.swift in Sources */,
 				D2D3A22B23C75EBF0008F615 /* BillboardData.swift in Sources */,
 				572EF60E1F92BC60009D75C7 /* RectangularPlane.swift in Sources */,
-				D2D3A22823C5E71E0008F615 /* BillboardView.swift in Sources */,
 				575613851FE9EB8700AEE0D6 /* TargetView.swift in Sources */,
 				57BB835B1F8910DB00D14A14 /* AppDelegate.swift in Sources */,
 			);

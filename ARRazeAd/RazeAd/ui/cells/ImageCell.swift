@@ -27,29 +27,11 @@
 /// THE SOFTWARE.
 
 import UIKit
-import ARKit
 
-private enum Section: Int {
-  case images = 1
-  case video = 0
-  case webBrowser = 2
-}
+class ImageCell: UICollectionViewCell {
+  @IBOutlet weak var imageView: UIImageView!
 
-private enum Cell: String {
-  case cellWebBrowser
-  case cellVideo
-  case cellImage
-}
-
-class BillboardViewController: UICollectionViewController {
-}
-
-extension BillboardViewController : UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return collectionView.bounds.size
-  }
-
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    return .zero
+  func show(image: UIImage) {
+    imageView.image = image
   }
 }
