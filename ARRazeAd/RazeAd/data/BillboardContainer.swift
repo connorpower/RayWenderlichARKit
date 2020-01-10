@@ -29,13 +29,31 @@
 import ARKit
 import SceneKit
 
-struct BillboardContainer {
+// MARK: - Protocols
+
+protocol VideoPlayerDelegate: class {
+    func didStartPlay()
+    func didEndPlay()
+}
+
+protocol VideoNodeHandler: class {
+    func createNode() -> SCNNode?
+    func removeNode()
+}
+
+// MARK: - BillboardContainer
+
+class BillboardContainer {
 
     // MARK: - Properties
 
     var data: BillboardData
 
+    weak var videoNodeHandler: VideoNodeHandler?
+    weak var videoPlayerDelegate: VideoPlayerDelegate?
+
     var viewController: BillboardViewController?
+    var isFullScreen = false
     var plane: RectangularPlane
 
     var billboardAnchor: ARAnchor

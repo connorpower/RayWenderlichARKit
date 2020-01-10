@@ -87,7 +87,10 @@ extension AdViewController {
 
         if billboard?.videoNode != nil {
             billboard?.billboardNode?.isHidden = false
-            removeVideo()
+            billboard?.videoNodeHandler?.removeNode()
+
+            billboard?.videoNodeHandler = nil
+            billboard?.videoNode = nil
             return
         }
 
@@ -167,6 +170,7 @@ private extension AdViewController {
         let anchor = ARAnchor(name: "billboard_anchor", transform: rotatedCenter)
 
         billboard = BillboardContainer(data: data, billboardAnchor: anchor, plane: plane)
+        billboard?.videoPlayerDelegate = self
 
         sceneView.session.add(anchor: anchor)
         print("New billboard created")
@@ -219,54 +223,21 @@ private extension AdViewController {
         return node
     }
 
-    private func createVideo() {
-        guard let billboard = billboard else { return }
+}
 
-        let rotation = SCNMatrix4MakeRotation(.pi / 2.0, 0.0, 0.0, 1.0)
-        let rotatedCenter = matrix_multiply(billboard.plane.center, matrix_float4x4(rotation))
+// MARK: - VideoPlayerDelegate
 
-        let anchor = ARAnchor(name: "video_anchor", transform: rotatedCenter)
-        sceneView.session.add(anchor: anchor)
-        self.billboard?.videoAnchor = anchor
+extension AdViewController: VideoPlayerDelegate {
+
+    func didStartPlay() {
+        billboard?.billboardNode?.isHidden = true
     }
 
-    private func removeVideo() {
-        if let videoAnchor = billboard?.videoAnchor {
-            sceneView.session.remove(anchor: videoAnchor)
-
-            billboard?.videoNode?.removeFromParentNode()
-
-            billboard?.videoAnchor = nil
-            billboard?.videoNode = nil
-        }
-    }
-
-    private func addVideoPlayerNode() -> SCNNode? {
-        guard let billboard = self.billboard else { return nil }
-
-        let billboardSize = CGSize(width: billboard.plane.width,
-                                   height: billboard.plane.height / 2.0)
-
-        let videoURL = URL(string: billboard.data.videoUrl)!
-        let player = AVPlayer(url: videoURL)
-
-        let plane = SCNPlane(width: billboardSize.width, height: billboardSize.height)
-        let material = SCNMaterial()
-        material.diffuse.contents = player
-        material.isDoubleSided = true
-        plane.materials = [material]
-
-        let node = SCNNode(geometry: plane)
-
-        self.billboard?.videoNode = node
-        self.billboard?.billboardNode?.isHidden = true
-        player.play()
-
-        return node
+    func didEndPlay() {
+        billboard?.billboardNode?.isHidden = false
     }
 
 }
-
 
 // MARK: - ARSCNViewDelegate
 
@@ -285,7 +256,7 @@ extension AdViewController: ARSCNViewDelegate {
                 }
             case (let videoAnchor) where videoAnchor == billboard.videoAnchor:
                 DispatchQueue.main.sync {
-                    node = addVideoPlayerNode()
+                    node = billboard.videoNodeHandler?.createNode()
                 }
             default:
                 fatalError("Unexpected anchor")

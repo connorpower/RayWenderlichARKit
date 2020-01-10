@@ -33,72 +33,100 @@ import ARKit
 
 class VideoCell: UICollectionViewCell {
 
+    // MARK: - Properties
+
+    private var isPlaying = false
+    private var videoUrl: String!
+    private var player: AVPlayer!
+
+    private weak var billboard: BillboardContainer?
+    private weak var sceneView: ARSCNView?
+
     // MARK: - IBOutlets
-    @IBOutlet private weak var playButton: UIButton!
+
+    @IBOutlet private weak var playButton: UIButton! {
+        didSet {
+            playButton.imageView?.contentMode = .scaleAspectFit
+        }
+    }
+
     @IBOutlet private weak var playerContainer: UIView!
 
     // MARK: - Functions
 
     func configure(videoUrl: String, sceneView: ARSCNView, billboard: BillboardContainer) {
+        self.videoUrl = videoUrl
+        self.sceneView = sceneView
+        self.billboard = billboard
 
+        billboard.videoNodeHandler = self
     }
 
     // MARK: - IBActions
 
     @IBAction private func play() {
+        guard let billboard = billboard else { return }
 
+        if billboard.isFullScreen {
+
+        } else {
+            createVideoPlayerAnchor()
+            billboard.videoPlayerDelegate?.didStartPlay()
+            playButton.isEnabled = false
+        }
+    }
+
+    // MARK: - Private Functions
+
+    private func createVideoPlayerAnchor() {
+        guard let billboard = billboard, let sceneView = sceneView else { return }
+
+        let center = matrix_multiply(billboard.plane.center,
+                                     matrix_float4x4(SCNMatrix4MakeRotation(.pi / 2.0, 0.0, 0.0, 1.0)))
+        let anchor = ARAnchor(name: "video player anchor", transform: center)
+        sceneView.session.add(anchor: anchor)
+
+        billboard.videoAnchor = anchor
     }
 
 }
 
-//extension VideoCell: VideoNodeHandler {
-//  func createNode() -> SCNNode? {
-//    guard let billboard = billboard else { return nil }
-//
-//    let frameSize = CGSize(width: 1024, height: 1024)
-//    let url = URL(string: videoUrl)!
-//
-//    let player = AVPlayer(url: url)
-//    videoNode = SKVideoNode(avPlayer: player)
-//    videoNode.size = frameSize
-//    videoNode.position = CGPoint(x: frameSize.width / 2, y: frameSize.height / 2)
-//    videoNode.yScale = -1.0
-//
-//    spriteScene = SKScene(size: frameSize)
-//    spriteScene.scaleMode = .aspectFit
-//    spriteScene.backgroundColor = UIColor(white: 33/255, alpha: 1.0)
-//    spriteScene.addChild(videoNode)
-//
-//    let billboardSize = CGSize(width: billboard.plane.width, height: billboard.plane.height / 2)
-//    let plane = SCNPlane(width: billboardSize.width, height: billboardSize.height)
-//    plane.firstMaterial!.isDoubleSided = true
-//    plane.firstMaterial!.diffuse.contents = spriteScene
-//    let node = SCNNode(geometry: plane)
-//
-//    billboard.videoNode = node
-//
-//    billboard.videoNodeHandler = self
-//
-//    videoNode.play()
-//    return node
-//  }
-//
-//  func removeNode() {
-//    videoNode?.pause()
-//
-//    spriteScene?.removeAllChildren()
-//    spriteScene = nil
-//
-//    if let videoAnchor = billboard?.videoAnchor {
-//      sceneView?.session.remove(anchor: videoAnchor)
-//    }
-//
-//    billboard?.videoPlayerDelegate?.didEndPlay()
-//
-//    billboard?.videoNode?.removeFromParentNode()
-//    billboard?.videoAnchor = nil
-//    billboard?.videoNode = nil
-//
-//    playButton.isEnabled = true
-//  }
-//}
+// MARK: - VideoNodeHandler
+
+extension VideoCell: VideoNodeHandler {
+
+    func createNode() -> SCNNode? {
+        guard let billboard = billboard else { return nil }
+
+        let player = AVPlayer(url: URL(string: videoUrl)!)
+
+        let billboardSize = CGSize(width: billboard.plane.width, height: billboard.plane.height / 2)
+        let plane = SCNPlane(width: billboardSize.width, height: billboardSize.height)
+        plane.firstMaterial!.isDoubleSided = true
+        plane.firstMaterial!.diffuse.contents = player
+        let node = SCNNode(geometry: plane)
+
+        billboard.videoNode = node
+        billboard.videoNodeHandler = self
+
+        player.play()
+        return node
+    }
+
+    func removeNode() {
+        player?.pause()
+
+        if let videoAnchor = billboard?.videoAnchor {
+            sceneView?.session.remove(anchor: videoAnchor)
+        }
+
+        billboard?.videoPlayerDelegate?.didEndPlay()
+
+        billboard?.videoNode?.removeFromParentNode()
+        billboard?.videoAnchor = nil
+        billboard?.videoNode = nil
+
+        playButton.isEnabled = true
+    }
+
+}
