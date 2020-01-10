@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7Gc-4D-Vjq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7Gc-4D-Vjq">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,16 +28,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9IC-NX-3vP">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9IC-NX-3vP">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstItem="9IC-NX-3vP" firstAttribute="top" secondItem="GZy-HS-7dU" secondAttribute="top" id="3GT-Xv-QmD"/>
-                                        <constraint firstAttribute="trailing" secondItem="9IC-NX-3vP" secondAttribute="trailing" id="4GD-8P-by0"/>
-                                        <constraint firstItem="9IC-NX-3vP" firstAttribute="leading" secondItem="GZy-HS-7dU" secondAttribute="leading" id="Lgo-7u-2JN"/>
-                                        <constraint firstAttribute="bottom" secondItem="9IC-NX-3vP" secondAttribute="bottom" id="aca-pp-4Qt"/>
-                                    </constraints>
                                 </collectionViewCellContentView>
                                 <connections>
                                     <outlet property="imageView" destination="9IC-NX-3vP" id="TMi-25-QBJ"/>
@@ -50,37 +45,24 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KwS-Hj-sfe">
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KwS-Hj-sfe">
                                             <rect key="frame" x="0.0" y="315" width="375" height="60"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                             <color key="backgroundColor" red="0.12941176470588234" green="0.12941176470588234" blue="0.12941176470588234" alpha="1" colorSpace="calibratedRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="60" id="UsI-Ie-DTi"/>
-                                            </constraints>
                                             <state key="normal" image="arKit-play"/>
                                             <connections>
                                                 <action selector="play" destination="fUi-9t-3cu" eventType="touchUpInside" id="Avf-qI-2f6"/>
                                             </connections>
                                         </button>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arKit-border" translatesAutoresizingMaskIntoConstraints="NO" id="Ecj-zR-aag">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="arKit-border" translatesAutoresizingMaskIntoConstraints="NO" id="Ecj-zR-aag">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="315"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
-                                        <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="oKk-dC-AaT">
+                                        <view contentMode="scaleAspectFit" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oKk-dC-AaT">
                                             <rect key="frame" x="18" y="18" width="339" height="279"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </view>
                                     </subviews>
-                                    <constraints>
-                                        <constraint firstItem="Ecj-zR-aag" firstAttribute="leading" secondItem="DU0-DZ-02j" secondAttribute="leading" id="2Mq-ci-fms"/>
-                                        <constraint firstItem="oKk-dC-AaT" firstAttribute="top" secondItem="DU0-DZ-02j" secondAttribute="topMargin" constant="10" id="FGs-5X-kyE"/>
-                                        <constraint firstItem="Ecj-zR-aag" firstAttribute="top" secondItem="DU0-DZ-02j" secondAttribute="top" id="KBF-9w-deP"/>
-                                        <constraint firstItem="KwS-Hj-sfe" firstAttribute="leading" secondItem="DU0-DZ-02j" secondAttribute="leading" id="Kdn-AP-Y8L"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="oKk-dC-AaT" secondAttribute="trailing" constant="10" id="P2E-nX-DVi"/>
-                                        <constraint firstItem="oKk-dC-AaT" firstAttribute="leading" secondItem="DU0-DZ-02j" secondAttribute="leadingMargin" constant="10" id="brO-hu-b2a"/>
-                                        <constraint firstAttribute="trailing" secondItem="Ecj-zR-aag" secondAttribute="trailing" id="gao-uv-Phr"/>
-                                        <constraint firstItem="KwS-Hj-sfe" firstAttribute="top" secondItem="oKk-dC-AaT" secondAttribute="bottom" constant="18" id="iAY-UK-Zvr"/>
-                                        <constraint firstAttribute="bottom" secondItem="KwS-Hj-sfe" secondAttribute="bottom" id="ndp-xP-MaX"/>
-                                        <constraint firstItem="KwS-Hj-sfe" firstAttribute="top" secondItem="Ecj-zR-aag" secondAttribute="bottom" id="spq-W1-7dd"/>
-                                        <constraint firstAttribute="trailing" secondItem="KwS-Hj-sfe" secondAttribute="trailing" id="xP7-dV-OdC"/>
-                                    </constraints>
                                 </collectionViewCellContentView>
                                 <connections>
                                     <outlet property="playButton" destination="KwS-Hj-sfe" id="U6n-9S-Olg"/>
@@ -124,7 +106,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="arKit-border" width="600" height="600"/>
-        <image name="arKit-play" width="60" height="60"/>
+        <image name="arKit-border" width="1200" height="1200"/>
+        <image name="arKit-play" width="120" height="120"/>
     </resources>
 </document>
