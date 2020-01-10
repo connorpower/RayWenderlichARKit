@@ -29,27 +29,40 @@
 import UIKit
 import ARKit
 
+// MARK: - Enums
+
 private enum Section: Int {
-  case images = 1
-  case video = 0
-  case webBrowser = 2
+    case images = 1
+    case video = 0
+    case webBrowser = 2
 }
 
 private enum Cell: String {
-  case cellWebBrowser
-  case cellVideo
-  case cellImage
+    case cellWebBrowser
+    case cellVideo
+    case cellImage
 }
+
+// MARK: - BillboardViewController
 
 class BillboardViewController: UICollectionViewController {
+
 }
 
-extension BillboardViewController : UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return collectionView.bounds.size
-  }
+// MARK: - UICollectionViewDelegateFlowLayout
 
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    return .zero
-  }
+extension BillboardViewController : UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.bounds.size
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return .zero
+    }
+
 }

@@ -32,14 +32,23 @@ import AVFoundation
 import ARKit
 
 class VideoCell: UICollectionViewCell {
-  @IBOutlet weak var playButton: UIButton!
-  @IBOutlet weak var playerContainer: UIView!
 
-  func configure(videoUrl: String, sceneView: ARSCNView, billboard: BillboardContainer) {
-  }
+    // MARK: - IBOutlets
+    @IBOutlet private weak var playButton: UIButton!
+    @IBOutlet private weak var playerContainer: UIView!
 
-  @IBAction func play() {
-  }
+    // MARK: - Functions
+
+    func configure(videoUrl: String, sceneView: ARSCNView, billboard: BillboardContainer) {
+
+    }
+
+    // MARK: - IBActions
+
+    @IBAction private func play() {
+
+    }
+
 }
 
 //extension VideoCell: VideoNodeHandler {

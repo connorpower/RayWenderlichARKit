@@ -29,9 +29,15 @@
 import UIKit
 
 class ImageCell: UICollectionViewCell {
-  @IBOutlet weak var imageView: UIImageView!
 
-  func show(image: UIImage) {
-    imageView.image = image
-  }
+    // MARK: - IBOutlets
+
+    @IBOutlet private weak var imageView: UIImageView!
+
+    // MARK: - Functions
+
+    func show(image: UIImage) {
+        imageView.image = image
+    }
+
 }
