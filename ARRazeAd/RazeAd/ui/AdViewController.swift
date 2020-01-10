@@ -67,6 +67,12 @@ class AdViewController: UIViewController {
         let config = ARWorldTrackingConfiguration()
         config.isLightEstimationEnabled = true
         config.worldAlignment = .camera
+
+        var detectionImages = ARReferenceImage.referenceImages(inGroupNamed: "RMK-ARKit-triggers", bundle: .main)!
+        let runtimeImage = ARReferenceImage(UIImage(named: "logo_2")!.cgImage!, orientation: .up, physicalWidth: 0.2)
+        detectionImages.insert(runtimeImage)
+        config.detectionImages = detectionImages
+
         sceneView.session.run(config)
     }
 
@@ -176,6 +182,26 @@ private extension AdViewController {
         print("New billboard created")
     }
 
+    private func createBillboard(center: matrix_float4x4,
+                                 size: CGSize) {
+        let data = BillboardData(link: "https://www.raywenderlich.com",
+                                 images: ["logo_1", "logo_2", "logo_3", "logo_4", "logo_5"],
+                                 videoUrl: "https://wolverine.raywenderlich.com/books/" +
+                                           "ark/sample_videos/beginning_arkit_intro.mp4")
+
+        let plane = RectangularPlane(center: center, size: size)
+        let rotation = SCNMatrix4MakeRotation(.pi / 2.0, -1.0, 0.0, 0.0)
+        let rotatedCenter = matrix_multiply(center, matrix_float4x4(rotation))
+        let anchor = ARAnchor(name: "billboard_anchor", transform: rotatedCenter)
+
+        billboard = BillboardContainer(data: data,
+                                       billboardAnchor: anchor,
+                                       plane: plane)
+        billboard?.videoPlayerDelegate = self
+        sceneView.session.add(anchor: anchor)
+        print("New billboard created")
+    }
+
     private func createBillboardController() {
         let navController = UIStoryboard(name: "Billboard",
                                          bundle: .main).instantiateInitialViewController() as! UINavigationController
@@ -243,6 +269,13 @@ extension AdViewController: VideoPlayerDelegate {
 
 extension AdViewController: ARSCNViewDelegate {
 
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        if let imageAnchor = anchors.compactMap({ $0 as? ARImageAnchor }).first {
+            createBillboard(center: imageAnchor.transform,
+                            size: imageAnchor.referenceImage.physicalSize)
+        }
+    }
+
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         guard let billboard = self.billboard else { return nil }
 
@@ -259,7 +292,7 @@ extension AdViewController: ARSCNViewDelegate {
                     node = billboard.videoNodeHandler?.createNode()
                 }
             default:
-                fatalError("Unexpected anchor")
+                break
         }
 
         return node
