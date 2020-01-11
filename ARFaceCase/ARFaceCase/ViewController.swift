@@ -34,103 +34,94 @@ import ARKit
 
 class ViewController: UIViewController {
 
-  // MARK: - Properties
+    // MARK: - IBOutlets
 
-  @IBOutlet var sceneView: ARSCNView!
-  @IBOutlet weak var messageLabel: UILabel!
-  
-  @IBOutlet weak var recordButton: UIButton!
+    @IBOutlet private var sceneView: ARSCNView!
+    @IBOutlet private weak var messageLabel: UILabel!
+    @IBOutlet private weak var recordButton: UIButton!
 
-  // MARK: - View Management
+    // MARK: - View Controller Lifecycle
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupScene()
-  }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupScene()
+    }
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-  }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
 
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-  }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
 
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-  }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
 
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-  }
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
 
-  override var prefersStatusBarHidden: Bool {
-    return true
-  }
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
 
-  // MARK: - Button Actions
+    // MARK: - IBActions
 
-  @IBAction func didTapReset(_ sender: Any) {
-    print("didTapReset")
-  }
+    @IBAction private func didTapReset(_ sender: Any) {
+        print("didTapReset")
+    }
 
-  @IBAction func didTapMask(_ sender: Any) {
-    print("didTapMask")
-  }
+    @IBAction private func didTapMask(_ sender: Any) {
+        print("didTapMask")
+    }
 
-  @IBAction func didTapGlasses(_ sender: Any) {
-    print("didTapGlasses")
-  }
+    @IBAction private func didTapGlasses(_ sender: Any) {
+        print("didTapGlasses")
+    }
 
-  @IBAction func didTapPig(_ sender: Any) {
-    print("didTapPig")
-  }
+    @IBAction private func didTapPig(_ sender: Any) {
+        print("didTapPig")
+    }
 
-  @IBAction func didTapRecord(_ sender: Any) {
-    print("didTapRecord")
-  }
+    @IBAction private func didTapRecord(_ sender: Any) {
+        print("didTapRecord")
+    }
+
+    // MARK: - Private Functions
+
+    private func setupScene() {
+        sceneView.delegate = self
+        sceneView.showsStatistics = true
+    }
+
+    // Tag: ARFaceTrackingConfiguration
+
+    // Tag: CreateARSCNFaceGeometry
+
+    // Tag: Setup Face Content Nodes
+
+    // Tag: Update UI
+    private func updateMessage(text: String) {
+        DispatchQueue.main.async {
+            self.messageLabel.text = text
+        }
+    }
+
 }
 
 // MARK: - ARSCNViewDelegate
 
 extension ViewController: ARSCNViewDelegate {
 
-  // Tag: SceneKit Renderer
+    // Tag: SceneKit Renderer
 
-  // Tag: ARNodeTracking
+    // Tag: ARNodeTracking
 
-  // Tag: ARFaceGeometryUpdate
+    // Tag: ARFaceGeometryUpdate
 
-  // Tag: ARSession Handling
-}
-
-// MARK: - Private methods
-
-private extension ViewController {
-
-  // Tag: SceneKit Setup
-  func setupScene() {
-    // Set the view's delegate
-    sceneView.delegate = self
-
-    // Show statistics such as fps and timing information
-    sceneView.showsStatistics = true
-  }
-
-  // Tag: ARFaceTrackingConfiguration
-
-  // Tag: CreateARSCNFaceGeometry
-
-  // Tag: Setup Face Content Nodes
-
-  // Tag: Update UI
-  func updateMessage(text: String) {
-    DispatchQueue.main.async {
-      self.messageLabel.text = text
-    }
-  }
+    // Tag: ARSession Handling
 }
 
 // MARK: - RPPreviewViewControllerDelegate (ReplayKit)
-
-

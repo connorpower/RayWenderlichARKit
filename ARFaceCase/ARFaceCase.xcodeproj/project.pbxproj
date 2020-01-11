@@ -45,9 +45,9 @@
 				04862EE21FFA77D30044C865 /* Products */,
 				D23C305423CA539A00A4A3B8 /* Frameworks */,
 			);
-			indentWidth = 2;
+			indentWidth = 4;
 			sourceTree = "<group>";
-			tabWidth = 2;
+			tabWidth = 4;
 		};
 		04862EE21FFA77D30044C865 /* Products */ = {
 			isa = PBXGroup;
