@@ -40,6 +40,10 @@ class ViewController: UIViewController {
     @IBOutlet private weak var messageLabel: UILabel!
     @IBOutlet private weak var recordButton: UIButton!
 
+    // MARK: - Properties
+
+    private var session: ARSession { return sceneView.session }
+
     // MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
@@ -53,10 +57,16 @@ class ViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        UIApplication.shared.isIdleTimerDisabled = true
+        resetTracking()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+
+        UIApplication.shared.isIdleTimerDisabled = false
+        session.pause()
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,6 +81,7 @@ class ViewController: UIViewController {
 
     @IBAction private func didTapReset(_ sender: Any) {
         print("didTapReset")
+        resetTracking()
     }
 
     @IBAction private func didTapMask(_ sender: Any) {
@@ -96,13 +107,27 @@ class ViewController: UIViewController {
         sceneView.showsStatistics = true
     }
 
-    // Tag: ARFaceTrackingConfiguration
+    private func resetTracking() {
+        guard ARFaceTrackingConfiguration.isSupported else {
+            updateMessage(text: "Face tracking is not supported")
+            return
+        }
+
+        updateMessage(text: "Looking for face...")
+
+        let config = ARFaceTrackingConfiguration()
+        config.isLightEstimationEnabled = true
+        config.providesAudioData = false
+        config.isWorldTrackingEnabled = false
+        config.maximumNumberOfTrackedFaces = 1
+
+        session.run(config, options: [.resetTracking, .removeExistingAnchors])
+    }
 
     // Tag: CreateARSCNFaceGeometry
 
     // Tag: Setup Face Content Nodes
 
-    // Tag: Update UI
     private func updateMessage(text: String) {
         DispatchQueue.main.async {
             self.messageLabel.text = text
@@ -122,6 +147,22 @@ extension ViewController: ARSCNViewDelegate {
     // Tag: ARFaceGeometryUpdate
 
     // Tag: ARSession Handling
+
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        print("** didFailWithError: \(error)")
+        updateMessage(text: "AR session failed.")
+    }
+
+    func sessionWasInterrupted(_ session: ARSession) {
+        print("** sessionInterrupted")
+        updateMessage(text: "Session interrupted.")
+    }
+
+    func sessionInterruptionEnded(_ session: ARSession) {
+        print("** sessionInterruptEnded")
+        updateMessage(text: "Session interruption ended.")
+    }
+
 }
 
 // MARK: - RPPreviewViewControllerDelegate (ReplayKit)
