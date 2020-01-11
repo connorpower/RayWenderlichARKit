@@ -304,14 +304,6 @@ extension AdViewController: ARSCNViewDelegate {
 
 extension AdViewController: ARSessionDelegate {
 
-    func session(_ session: ARSession, didFailWithError error: Error) {
-
-    }
-
-    func sessionWasInterrupted(_ session: ARSession) {
-
-    }
-
     func sessionInterruptionEnded(_ session: ARSession) {
         removeBillboard()
     }
