@@ -12,6 +12,7 @@
 		04862EEC1FFA77D40044C865 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04862EEA1FFA77D40044C865 /* Main.storyboard */; };
 		04862EEE1FFA77D40044C865 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04862EED1FFA77D40044C865 /* Assets.xcassets */; };
 		04862EF11FFA77D40044C865 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04862EEF1FFA77D40044C865 /* LaunchScreen.storyboard */; };
+		D23C305623CA539B00A4A3B8 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D23C305523CA539B00A4A3B8 /* ARKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		04862EED1FFA77D40044C865 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04862EF01FFA77D40044C865 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04862EF21FFA77D40044C865 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D23C305523CA539B00A4A3B8 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D23C305623CA539B00A4A3B8 /* ARKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +43,7 @@
 			children = (
 				04862EE31FFA77D30044C865 /* ARFaceCase */,
 				04862EE21FFA77D30044C865 /* Products */,
+				D23C305423CA539A00A4A3B8 /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -64,6 +68,14 @@
 				04862EF21FFA77D40044C865 /* Info.plist */,
 			);
 			path = ARFaceCase;
+			sourceTree = "<group>";
+		};
+		D23C305423CA539A00A4A3B8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D23C305523CA539B00A4A3B8 /* ARKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
