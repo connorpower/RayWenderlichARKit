@@ -16,6 +16,7 @@
 		D25FF0F923CB1E3900A0C126 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D25FF0F823CB1E3900A0C126 /* Models.scnassets */; };
 		D2734DB323CB14E400DAAC54 /* Mask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2734DB223CB14E400DAAC54 /* Mask.swift */; };
 		D2F453E423CB4338008C6AFF /* Glasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F453E323CB4338008C6AFF /* Glasses.swift */; };
+		D2F453E623CB53B1008C6AFF /* Pig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F453E523CB53B1008C6AFF /* Pig.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		D25FF0F823CB1E3900A0C126 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		D2734DB223CB14E400DAAC54 /* Mask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mask.swift; sourceTree = "<group>"; };
 		D2F453E323CB4338008C6AFF /* Glasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glasses.swift; sourceTree = "<group>"; };
+		D2F453E523CB53B1008C6AFF /* Pig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pig.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 			children = (
 				D2734DB223CB14E400DAAC54 /* Mask.swift */,
 				D2F453E323CB4338008C6AFF /* Glasses.swift */,
+				D2F453E523CB53B1008C6AFF /* Pig.swift */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2F453E623CB53B1008C6AFF /* Pig.swift in Sources */,
 				04862EE91FFA77D40044C865 /* ViewController.swift in Sources */,
 				04862EE51FFA77D40044C865 /* AppDelegate.swift in Sources */,
 				D2F453E423CB4338008C6AFF /* Glasses.swift in Sources */,

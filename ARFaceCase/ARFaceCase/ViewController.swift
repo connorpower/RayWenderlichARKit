@@ -40,6 +40,7 @@ class ViewController: UIViewController {
         case none
         case mask
         case glasses
+        case pig
     }
 
     // MARK: - IBOutlets
@@ -56,6 +57,7 @@ class ViewController: UIViewController {
     private var mask: Mask?
     private var maskType = Mask.MaskType.basic
     private var glasses: Glasses?
+    private var pig: Pig?
 
     private var contentType = ContentType.none
 
@@ -120,6 +122,9 @@ class ViewController: UIViewController {
 
     @IBAction private func didTapPig(_ sender: Any) {
         print("didTapPig")
+
+        contentType = .pig
+        resetTracking()
     }
 
     @IBAction private func didTapRecord(_ sender: Any) {
@@ -162,8 +167,12 @@ class ViewController: UIViewController {
 
         let maskGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
         mask = Mask(geometry: maskGeometry, maskType: maskType)
+
         let glassesGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
         glasses = Glasses(geometry: glassesGeometry)
+
+        let pigGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
+        pig = Pig(geometry: pigGeometry)
     }
 
     private func setupFaceNodeContent() {
@@ -179,6 +188,10 @@ class ViewController: UIViewController {
         case .glasses:
             if let glasses = glasses {
                 node.addChildNode(glasses)
+            }
+        case .pig:
+            if let pig = pig {
+                node.addChildNode(pig)
             }
         case .none:
             break
@@ -212,6 +225,8 @@ extension ViewController: ARSCNViewDelegate {
                 mask?.update(withFaceAnchor: faceAnchor)
             case .glasses:
                 glasses?.update(withFaceAnchor: faceAnchor)
+        case .pig:
+            pig?.update(withFaceAnchor: faceAnchor)
             case .none:
                 break
         }
