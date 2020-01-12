@@ -114,6 +114,13 @@ class ViewController: UIViewController {
     private func setupScene() {
         sceneView.delegate = self
         sceneView.showsStatistics = true
+
+        sceneView.automaticallyUpdatesLighting = true
+        sceneView.autoenablesDefaultLighting = false
+        sceneView.scene.lightingEnvironment.intensity = 1.0
+
+        sceneView.rendersCameraGrain = true
+        sceneView.scene.rootNode.camera?.grainIntensity = 1.0
     }
 
     private func resetTracking() {
@@ -172,6 +179,13 @@ extension ViewController: ARSCNViewDelegate {
 
         updateMessage(text: "Tracking your face...")
         mask?.update(withFaceAnchor: faceAnchor)
+    }
+
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        guard let estimate = session.currentFrame?.lightEstimate else { return }
+
+        let intensity = estimate.ambientIntensity / 1000.0
+        sceneView.scene.lightingEnvironment.intensity = intensity
     }
 
     func session(_ session: ARSession, didFailWithError error: Error) {
