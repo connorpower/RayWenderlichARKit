@@ -34,6 +34,14 @@ import ARKit
 
 class ViewController: UIViewController {
 
+    // MARK: - Enums
+
+    private enum ContentType {
+        case none
+        case mask
+        case glasses
+    }
+
     // MARK: - IBOutlets
 
     @IBOutlet private var sceneView: ARSCNView!
@@ -47,6 +55,9 @@ class ViewController: UIViewController {
     private var anchorNode: SCNNode?
     private var mask: Mask?
     private var maskType = Mask.MaskType.basic
+    private var glasses: Glasses?
+
+    private var contentType = ContentType.none
 
     // MARK: - View Controller Lifecycle
 
@@ -86,12 +97,15 @@ class ViewController: UIViewController {
 
     @IBAction private func didTapReset(_ sender: Any) {
         print("didTapReset")
+
+        contentType = .none
         resetTracking()
     }
 
     @IBAction private func didTapMask(_ sender: Any) {
         print("didTapMask")
 
+        contentType = .mask
         maskType = maskType.next()
         mask?.swapMaterials(maskType: maskType)
         resetTracking()
@@ -99,6 +113,9 @@ class ViewController: UIViewController {
 
     @IBAction private func didTapGlasses(_ sender: Any) {
         print("didTapGlasses")
+
+        contentType = .glasses
+        resetTracking()
     }
 
     @IBAction private func didTapPig(_ sender: Any) {
@@ -145,6 +162,8 @@ class ViewController: UIViewController {
 
         let maskGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
         mask = Mask(geometry: maskGeometry, maskType: maskType)
+        let glassesGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
+        glasses = Glasses(geometry: glassesGeometry)
     }
 
     private func setupFaceNodeContent() {
@@ -152,8 +171,17 @@ class ViewController: UIViewController {
 
         node.childNodes.forEach { $0.removeFromParentNode() }
 
-        if let mask = mask {
-            node.addChildNode(mask)
+        switch contentType {
+        case .mask:
+            if let mask = mask {
+                node.addChildNode(mask)
+            }
+        case .glasses:
+            if let glasses = glasses {
+                node.addChildNode(glasses)
+            }
+        case .none:
+            break
         }
     }
 
@@ -178,7 +206,15 @@ extension ViewController: ARSCNViewDelegate {
         guard let faceAnchor = anchor as? ARFaceAnchor else { return }
 
         updateMessage(text: "Tracking your face...")
-        mask?.update(withFaceAnchor: faceAnchor)
+
+        switch contentType {
+            case .mask:
+                mask?.update(withFaceAnchor: faceAnchor)
+            case .glasses:
+                glasses?.update(withFaceAnchor: faceAnchor)
+            case .none:
+                break
+        }
     }
 
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
