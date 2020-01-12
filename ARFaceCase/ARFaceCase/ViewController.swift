@@ -31,6 +31,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import ReplayKit
 
 class ViewController: UIViewController {
 
@@ -47,7 +48,12 @@ class ViewController: UIViewController {
 
     @IBOutlet private var sceneView: ARSCNView!
     @IBOutlet private weak var messageLabel: UILabel!
-    @IBOutlet private weak var recordButton: UIButton!
+
+    @IBOutlet private weak var recordButton: UIButton! {
+        didSet {
+            recordButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: 16.0, bottom: 0.0, right: 16.0)
+        }
+    }
 
     // MARK: - Properties
 
@@ -61,12 +67,17 @@ class ViewController: UIViewController {
 
     private var contentType = ContentType.none
 
+    private let sharedRecorder = RPScreenRecorder.shared()
+    private var isRecording = false
+
     // MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScene()
         createFaceGeometry()
+
+        sharedRecorder.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -129,6 +140,17 @@ class ViewController: UIViewController {
 
     @IBAction private func didTapRecord(_ sender: Any) {
         print("didTapRecord")
+
+        guard sharedRecorder.isAvailable else {
+            print("Recording is not available")
+            return
+        }
+
+        if !isRecording {
+            startRecording()
+        } else {
+            stopRecording()
+        }
     }
 
     // MARK: - Private Functions
@@ -257,3 +279,72 @@ extension ViewController: ARSCNViewDelegate {
 }
 
 // MARK: - RPPreviewViewControllerDelegate (ReplayKit)
+
+extension ViewController: RPPreviewViewControllerDelegate, RPScreenRecorderDelegate {
+
+    func previewControllerDidFinish(_ previewController: RPPreviewViewController) {
+        print("RPPreviewViewController didFinish")
+        dismiss(animated: true, completion: nil)
+    }
+
+    func screenRecorder(_ screenRecorder: RPScreenRecorder,
+                        didStopRecordingWith previewViewController: RPPreviewViewController?,
+                        error: Error?) {
+        guard error == nil else {
+            print("There was an error recording: \(String(describing: error?.localizedDescription))")
+            self.isRecording = false
+            return
+        }
+    }
+
+    func screenRecorderDidChangeAvailability(_ screenRecorder: RPScreenRecorder) {
+        DispatchQueue.main.async {
+            self.recordButton.isEnabled = screenRecorder.isAvailable
+        }
+    }
+
+    private func startRecording() {
+        sharedRecorder.isMicrophoneEnabled = true
+
+        sharedRecorder.startRecording { error in
+            guard error == nil else {
+                print("There was an error starting the recording: \(String(describing: error?.localizedDescription))")
+                return
+            }
+
+            print("Started recording successfully")
+            self.isRecording = true
+
+            DispatchQueue.main.async {
+                self.recordButton.setTitle("Stop Recording", for: .normal)
+                self.recordButton.backgroundColor = .red
+            }
+        }
+    }
+
+    private func stopRecording() {
+        sharedRecorder.isMicrophoneEnabled = false
+
+        sharedRecorder.stopRecording { previewViewController, error in
+            guard error == nil else {
+                print("There was an error stopping the recording: \(String(describing: error?.localizedDescription))")
+                return
+            }
+
+            print("Stopped recording successfully")
+            self.isRecording = false
+
+            if let preview = previewViewController {
+                preview.previewControllerDelegate = self
+                preview.view.tintColor = .systemGreen
+                self.present(preview, animated: true, completion: nil)
+            }
+
+            DispatchQueue.main.async {
+                self.recordButton.setTitle("Start Recording", for: .normal)
+                self.recordButton.backgroundColor = UIColor(named: "ui-green")
+            }
+        }
+    }
+
+}

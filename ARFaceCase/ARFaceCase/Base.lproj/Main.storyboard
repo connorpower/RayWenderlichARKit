@@ -3,6 +3,7 @@
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,9 +20,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                             </arscnView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebh-wK-LXx">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="80.666666666666671"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="80.333333333333329"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hha-f8-Bl7">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="81"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80.333333333333329"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Let's Make Faces" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="88T-9E-0Q7">
@@ -40,8 +41,8 @@
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dWS-3t-WNc" userLabel="Record Button">
-                                <rect key="frame" x="137.66666666666666" y="88.666666666666671" width="100" height="40.000000000000014"/>
-                                <color key="backgroundColor" red="0.00080885994250000002" green="0.40933775900000002" blue="0.2156471908" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <rect key="frame" x="137.66666666666666" y="88.333333333333329" width="100" height="39.999999999999986"/>
+                                <color key="backgroundColor" name="ui-green"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="100" id="Bq7-ja-bWP"/>
                                     <constraint firstAttribute="height" constant="40" id="kcl-9K-gXe"/>
@@ -142,5 +143,9 @@
         <image name="pig-button" width="300" height="300"/>
         <image name="reset-button" width="300" height="300"/>
         <image name="woot-button" width="300" height="300"/>
+        <namedColor name="ui-green">
+            <color red="0.0" green="0.40784313725490196" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
+    <color key="tintColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
