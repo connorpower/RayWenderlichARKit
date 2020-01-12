@@ -46,6 +46,7 @@ class ViewController: UIViewController {
 
     private var anchorNode: SCNNode?
     private var mask: Mask?
+    private var maskType = Mask.MaskType.basic
 
     // MARK: - View Controller Lifecycle
 
@@ -90,6 +91,10 @@ class ViewController: UIViewController {
 
     @IBAction private func didTapMask(_ sender: Any) {
         print("didTapMask")
+
+        maskType = maskType.next()
+        mask?.swapMaterials(maskType: maskType)
+        resetTracking()
     }
 
     @IBAction private func didTapGlasses(_ sender: Any) {
@@ -132,7 +137,7 @@ class ViewController: UIViewController {
         updateMessage(text: "Creating face geometry...")
 
         let maskGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
-        mask = Mask(geometry: maskGeometry)
+        mask = Mask(geometry: maskGeometry, maskType: maskType)
     }
 
     private func setupFaceNodeContent() {

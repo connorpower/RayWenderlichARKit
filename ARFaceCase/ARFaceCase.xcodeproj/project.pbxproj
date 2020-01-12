@@ -13,6 +13,7 @@
 		04862EEE1FFA77D40044C865 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04862EED1FFA77D40044C865 /* Assets.xcassets */; };
 		04862EF11FFA77D40044C865 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04862EEF1FFA77D40044C865 /* LaunchScreen.storyboard */; };
 		D23C305623CA539B00A4A3B8 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D23C305523CA539B00A4A3B8 /* ARKit.framework */; };
+		D25FF0F923CB1E3900A0C126 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D25FF0F823CB1E3900A0C126 /* Models.scnassets */; };
 		D2734DB323CB14E400DAAC54 /* Mask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2734DB223CB14E400DAAC54 /* Mask.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,7 @@
 		04862EF01FFA77D40044C865 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04862EF21FFA77D40044C865 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D23C305523CA539B00A4A3B8 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		D25FF0F823CB1E3900A0C126 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		D2734DB223CB14E400DAAC54 /* Mask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				04862EED1FFA77D40044C865 /* Assets.xcassets */,
 				04862EEF1FFA77D40044C865 /* LaunchScreen.storyboard */,
 				04862EF21FFA77D40044C865 /* Info.plist */,
+				D25FF0F823CB1E3900A0C126 /* Models.scnassets */,
 			);
 			path = ARFaceCase;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04862EF11FFA77D40044C865 /* LaunchScreen.storyboard in Resources */,
+				D25FF0F923CB1E3900A0C126 /* Models.scnassets in Resources */,
 				04862EEE1FFA77D40044C865 /* Assets.xcassets in Resources */,
 				04862EEC1FFA77D40044C865 /* Main.storyboard in Resources */,
 			);
