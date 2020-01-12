@@ -44,11 +44,15 @@ class ViewController: UIViewController {
 
     private var session: ARSession { return sceneView.session }
 
+    private var anchorNode: SCNNode?
+    private var mask: Mask?
+
     // MARK: - View Controller Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupScene()
+        createFaceGeometry()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -124,9 +128,22 @@ class ViewController: UIViewController {
         session.run(config, options: [.resetTracking, .removeExistingAnchors])
     }
 
-    // Tag: CreateARSCNFaceGeometry
+    private func createFaceGeometry() {
+        updateMessage(text: "Creating face geometry...")
 
-    // Tag: Setup Face Content Nodes
+        let maskGeometry = ARSCNFaceGeometry(device: sceneView.device!)!
+        mask = Mask(geometry: maskGeometry)
+    }
+
+    private func setupFaceNodeContent() {
+        guard let node = anchorNode else { return }
+
+        node.childNodes.forEach { $0.removeFromParentNode() }
+
+        if let mask = mask {
+            node.addChildNode(mask)
+        }
+    }
 
     private func updateMessage(text: String) {
         DispatchQueue.main.async {
@@ -142,7 +159,10 @@ extension ViewController: ARSCNViewDelegate {
 
     // Tag: SceneKit Renderer
 
-    // Tag: ARNodeTracking
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        anchorNode = node
+        setupFaceNodeContent()
+    }
 
     // Tag: ARFaceGeometryUpdate
 

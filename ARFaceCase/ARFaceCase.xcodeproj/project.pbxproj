@@ -13,6 +13,7 @@
 		04862EEE1FFA77D40044C865 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04862EED1FFA77D40044C865 /* Assets.xcassets */; };
 		04862EF11FFA77D40044C865 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04862EEF1FFA77D40044C865 /* LaunchScreen.storyboard */; };
 		D23C305623CA539B00A4A3B8 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D23C305523CA539B00A4A3B8 /* ARKit.framework */; };
+		D2734DB323CB14E400DAAC54 /* Mask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2734DB223CB14E400DAAC54 /* Mask.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		04862EF01FFA77D40044C865 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04862EF21FFA77D40044C865 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D23C305523CA539B00A4A3B8 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		D2734DB223CB14E400DAAC54 /* Mask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 		04862EE31FFA77D30044C865 /* ARFaceCase */ = {
 			isa = PBXGroup;
 			children = (
+				D2734DB123CB14CE00DAAC54 /* Content */,
 				04862EE41FFA77D40044C865 /* AppDelegate.swift */,
 				04862EE81FFA77D40044C865 /* ViewController.swift */,
 				04862EEA1FFA77D40044C865 /* Main.storyboard */,
@@ -76,6 +79,14 @@
 				D23C305523CA539B00A4A3B8 /* ARKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D2734DB123CB14CE00DAAC54 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				D2734DB223CB14E400DAAC54 /* Mask.swift */,
+			);
+			path = Content;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -106,7 +117,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = Razeware;
+				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					04862EE01FFA77D30044C865 = {
 						CreatedOnToolsVersion = 9.2;
@@ -153,6 +164,7 @@
 			files = (
 				04862EE91FFA77D40044C865 /* ViewController.swift in Sources */,
 				04862EE51FFA77D40044C865 /* AppDelegate.swift in Sources */,
+				D2734DB323CB14E400DAAC54 /* Mask.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
