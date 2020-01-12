@@ -14,6 +14,9 @@ class Pig: SCNNode {
 
     private let occlusionNode: SCNNode
 
+    private var neutralBrowY: Float = 0
+    private lazy var browNode = childNode(withName: "brow", recursively: true)!
+
     // MARK: - Initialization
 
     init(geometry: ARSCNFaceGeometry) {
@@ -33,6 +36,8 @@ class Pig: SCNNode {
         let node = SCNReferenceNode(url: url)!
         node.load()
         addChildNode(node)
+
+        neutralBrowY = browNode.position.y
     }
 
     required init?(coder: NSCoder) {
@@ -42,8 +47,18 @@ class Pig: SCNNode {
     // MARK: - Functions
 
     func update(withFaceAnchor faceAnchor: ARFaceAnchor) {
-        let geometry = self.geometry as! ARSCNFaceGeometry
-        geometry.update(from: faceAnchor.geometry)
+        blendShapes = faceAnchor.blendShapes
+    }
+
+    // MARK: - Private Functions
+
+    private var blendShapes: [ARFaceAnchor.BlendShapeLocation: Any] = [:] {
+        didSet {
+            guard let browUp = blendShapes[.browInnerUp] as? Float else { return }
+
+            let browHeight = browNode.boundingBox.max.y - browNode.boundingBox.min.y
+            browNode.position.y = neutralBrowY + browUp * browHeight
+        }
     }
 
 }
