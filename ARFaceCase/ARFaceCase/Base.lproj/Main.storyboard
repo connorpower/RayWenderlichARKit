@@ -21,7 +21,7 @@
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebh-wK-LXx">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="80.666666666666671"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hha-f8-Bl7">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="80.666666666666671"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="81"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Let's Make Faces" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="88T-9E-0Q7">
@@ -40,15 +40,23 @@
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dWS-3t-WNc" userLabel="Record Button">
-                                <rect key="frame" x="10" y="88.666666666666671" width="355" height="40.000000000000014"/>
-                                <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="137.66666666666666" y="88.666666666666671" width="100" height="40.000000000000014"/>
+                                <color key="backgroundColor" red="0.00080885994250000002" green="0.40933775900000002" blue="0.2156471908" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" priority="750" constant="100" id="Bq7-ja-bWP"/>
                                     <constraint firstAttribute="height" constant="40" id="kcl-9K-gXe"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <state key="normal" title="[ RECORD ]">
+                                <color key="tintColor" red="0.0" green="0.67843137249999996" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Record">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="didTapRecord:" destination="BV1-FR-VrT" eventType="touchUpInside" id="G4b-yl-UYt"/>
                                 </connections>
@@ -96,6 +104,7 @@
                             <constraint firstItem="Pgn-cO-XXX" firstAttribute="width" secondItem="5S5-e1-VjI" secondAttribute="width" id="Cnt-Yg-cCU"/>
                             <constraint firstItem="mBg-Xq-Zls" firstAttribute="leading" secondItem="nbN-qZ-PFw" secondAttribute="leading" id="EKt-gl-VM7"/>
                             <constraint firstItem="Kp6-6j-pzr" firstAttribute="width" secondItem="5S5-e1-VjI" secondAttribute="width" id="FcN-cg-GSF"/>
+                            <constraint firstItem="dWS-3t-WNc" firstAttribute="centerX" secondItem="gDR-vR-dDW" secondAttribute="centerX" id="Fzm-4w-p2I"/>
                             <constraint firstItem="nbN-qZ-PFw" firstAttribute="trailing" secondItem="mBg-Xq-Zls" secondAttribute="trailing" id="IxM-b8-ezZ"/>
                             <constraint firstItem="Pgn-cO-XXX" firstAttribute="centerY" secondItem="5S5-e1-VjI" secondAttribute="centerY" id="KWV-aZ-MqD"/>
                             <constraint firstItem="mBg-Xq-Zls" firstAttribute="bottom" secondItem="gDR-vR-dDW" secondAttribute="bottom" id="Km4-BU-19k"/>
@@ -105,12 +114,10 @@
                             <constraint firstItem="nft-ra-cey" firstAttribute="centerY" secondItem="5S5-e1-VjI" secondAttribute="centerY" id="bSo-uK-4sI"/>
                             <constraint firstItem="ebh-wK-LXx" firstAttribute="leading" secondItem="nbN-qZ-PFw" secondAttribute="leading" id="cmV-SB-Q4t"/>
                             <constraint firstItem="88T-9E-0Q7" firstAttribute="top" secondItem="nbN-qZ-PFw" secondAttribute="top" priority="750" id="fVB-20-9WN"/>
-                            <constraint firstItem="nbN-qZ-PFw" firstAttribute="trailing" secondItem="dWS-3t-WNc" secondAttribute="trailing" constant="10" id="fbw-VN-oNn"/>
                             <constraint firstItem="nft-ra-cey" firstAttribute="leading" secondItem="Pgn-cO-XXX" secondAttribute="trailing" constant="16" id="iDi-3O-50A"/>
                             <constraint firstItem="nbN-qZ-PFw" firstAttribute="bottom" secondItem="5S5-e1-VjI" secondAttribute="bottom" constant="22" id="iP5-zY-TCt"/>
                             <constraint firstItem="dWS-3t-WNc" firstAttribute="top" secondItem="ebh-wK-LXx" secondAttribute="bottom" constant="8" id="jjb-hf-8QS"/>
                             <constraint firstItem="mBg-Xq-Zls" firstAttribute="trailing" secondItem="gDR-vR-dDW" secondAttribute="trailing" id="kBd-ZQ-D0j"/>
-                            <constraint firstItem="dWS-3t-WNc" firstAttribute="leading" secondItem="nbN-qZ-PFw" secondAttribute="leading" constant="10" id="qxk-qh-pFE"/>
                             <constraint firstItem="Kp6-6j-pzr" firstAttribute="height" secondItem="5S5-e1-VjI" secondAttribute="height" id="tG5-V7-ggq"/>
                             <constraint firstItem="nft-ra-cey" firstAttribute="height" secondItem="5S5-e1-VjI" secondAttribute="height" id="u8q-0D-wV1"/>
                             <constraint firstItem="Pgn-cO-XXX" firstAttribute="leading" secondItem="Kp6-6j-pzr" secondAttribute="trailing" constant="16" id="viF-6s-mvZ"/>
