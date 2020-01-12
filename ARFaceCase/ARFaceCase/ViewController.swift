@@ -157,16 +157,17 @@ class ViewController: UIViewController {
 
 extension ViewController: ARSCNViewDelegate {
 
-    // Tag: SceneKit Renderer
-
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         anchorNode = node
         setupFaceNodeContent()
     }
 
-    // Tag: ARFaceGeometryUpdate
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        guard let faceAnchor = anchor as? ARFaceAnchor else { return }
 
-    // Tag: ARSession Handling
+        updateMessage(text: "Tracking your face...")
+        mask?.update(withFaceAnchor: faceAnchor)
+    }
 
     func session(_ session: ARSession, didFailWithError error: Error) {
         print("** didFailWithError: \(error)")

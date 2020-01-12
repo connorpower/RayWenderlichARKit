@@ -26,4 +26,12 @@ class Mask: SCNNode {
         fatalError("\(#function) has not been implemented")
     }
 
+    // MARK: - Functions
+
+    func update(withFaceAnchor faceAnchor: ARFaceAnchor) {
+        let faceGeometry = geometry as! ARSCNFaceGeometry
+
+        faceGeometry.update(from: faceAnchor.geometry)
+    }
+
 }
