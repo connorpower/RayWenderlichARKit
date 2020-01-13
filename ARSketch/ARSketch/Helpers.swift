@@ -59,6 +59,25 @@ extension ARCamera.TrackingState: CustomStringConvertible {
             return "Unknown"
         }
     }
+
+    public var localizedFeedback: String {
+        switch self {
+        case .normal:
+            return "Move around to map the environment."
+        case .notAvailable:
+            return "Tracking unvailable."
+        case .limited(.initializing):
+            return "Initializing AR Session"
+        case .limited(.excessiveMotion):
+            return "Move your device more slowly."
+        case .limited(.insufficientFeatures):
+            return "Point your device at a surface or improve the lighting conditions."
+        case .limited(.relocalizing):
+            return "Resuming session. Move to where you where when the session was interrupted."
+        @unknown default:
+            return "Unknown tracking state."
+        }
+    }
 }
 
 extension UIViewController {

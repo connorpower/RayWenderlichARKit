@@ -52,8 +52,10 @@ class ViewController: UIViewController {
 
     // MARK: - Properties
 
-    fileprivate var previousPoint: SCNVector3?
+    private var previousPoint: SCNVector3?
     private let lineColor = UIColor.white
+
+    private var lineObjectAnchors =  [ARAnchor]()
 
     private var isSketchButtonPressed = false
     private var viewCenter: CGPoint?
@@ -76,6 +78,12 @@ class ViewController: UIViewController {
         }
     }()
 
+    private var mapDataFromFile: Data? {
+        return try? Data(contentsOf: mapSaveURL)
+    }
+
+    private var isRelocalizingMap = false
+
     // MARK: - View Life Cycle
 
     // Lock the orientation of the app to the orientation in which it is launched
@@ -86,6 +94,7 @@ class ViewController: UIViewController {
 
         let viewBounds = self.view.bounds
         viewCenter = CGPoint(x: viewBounds.width / 2.0, y: viewBounds.height / 2.0)
+        loadExperienceButton.isEnabled = (mapDataFromFile != nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -100,9 +109,7 @@ class ViewController: UIViewController {
         // have long periods of interaction without touching the screen or buttons.
         UIApplication.shared.isIdleTimerDisabled = true
 
-        //hide buttons
         saveExperienceButton.isHidden = true
-        loadExperienceButton.isHidden = true
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -114,24 +121,90 @@ class ViewController: UIViewController {
 
     // MARK: - Place AR content
 
-    private var currentLineAnchorName = ""
-    private var lineObjectAnchors =  [ARAnchor]()
-
     private func addLineAnchorForObject(sourcePoint: SCNVector3?, destinationPoint: SCNVector3?) {
         guard let hitTestResult = sceneView
             .hitTest(self.viewCenter!, types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
             .first
             else { return }
 
-        currentLineAnchorName = "virtualObject\(lineObjectAnchors.count)"
-
-        let lineAnchor = ARLineAnchor(name: currentLineAnchorName,
+        let lineAnchor = ARLineAnchor(name: "virtualObject\(lineObjectAnchors.count)",
                                       transform: hitTestResult.worldTransform,
                                       sourcePoint: sourcePoint,
                                       destinationPoint: destinationPoint)
 
         lineObjectAnchors.append(lineAnchor)
         sceneView.session.add(anchor: lineAnchor)
+    }
+
+    // MARK: - Save & Load World Maps
+
+    private func saveWorldMap() {
+        sceneView.session.getCurrentWorldMap { map, error in
+            guard let map = map else {
+                self.showAlert(title: "Can't get current world map", message: error!.localizedDescription)
+                return
+            }
+
+            guard let snapshotAnchor = SnapshotAnchor(capturing: self.sceneView) else {
+                fatalError("Failed to take snapshot")
+            }
+            map.anchors.append(snapshotAnchor)
+
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
+                try data.write(to: self.mapSaveURL, options: [.atomic])
+            } catch {
+                fatalError("Can't save map: \(error.localizedDescription)")
+            }
+
+            DispatchQueue.main.async {
+                self.loadExperienceButton.isHidden = false
+                self.loadExperienceButton.isEnabled = true
+            }
+        }
+    }
+
+    private func loadWorldMap() -> ARWorldMap {
+        guard let data = mapDataFromFile else {
+            fatalError("Saved map should already exist if this codepath was allowed")
+        }
+
+        do {
+            guard let map = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) else {
+                fatalError("No world map in archive data")
+            }
+            return map
+        } catch {
+            fatalError("Can't load map: \(error.localizedDescription)")
+        }
+    }
+
+    private func updateSessionInfoLabel(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
+        let message: String
+        snapshotThumbnailImageView.isHidden = true
+
+        switch (trackingState, frame.worldMappingStatus) {
+        case (.normal, .mapped),
+             (.normal, .extending):
+            if frame.anchors.contains(where: { $0.name == "virtualObject0" }) {
+                message = "Tap 'Save Experience' to save the current map."
+
+            } else {
+                message = "Hold 'Sketch' to draw something."
+            }
+        case (.normal, _) where mapDataFromFile != nil && !isRelocalizingMap:
+            message = "Tap 'Load Experience' to load a saved experience."
+        case (.normal, _) where mapDataFromFile == nil:
+            message = "Move around to map the environment."
+        case (.limited(.relocalizing), _) where isRelocalizingMap:
+            message = "Move your device to the location shown in the image."
+            snapshotThumbnailImageView.isHidden = false
+        default:
+            message = trackingState.localizedFeedback
+        }
+
+        sessionInfoLabel.text = message
+        sessionInfoView.isHidden = message.isEmpty
     }
 
 }
@@ -198,6 +271,17 @@ extension ViewController: ARSessionDelegate {
         """
     }
 
+    func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {
+        return true
+    }
+
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        guard let frame = session.currentFrame
+            else { return }
+
+        updateSessionInfoLabel(for: frame, trackingState: camera.trackingState)
+    }
+
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay.
         sessionInfoLabel.text = "Session was interrupted"
@@ -220,37 +304,30 @@ extension ViewController: ARSessionDelegate {
 extension ViewController {
 
     @IBAction func resetTracking(_ sender: UIButton?) {
-
+        sceneView.session.run(defaultConfiguration, options: [.resetTracking, .removeExistingAnchors])
+        lineObjectAnchors.removeAll()
+        isRelocalizingMap = false
     }
 
     @IBAction func saveExperience(_ sender: UIButton) {
-        sceneView.session.getCurrentWorldMap { map, error in
-            guard let map = map else {
-                self.showAlert(title: "Can't get current world map", message: error!.localizedDescription)
-                return
-            }
-
-            guard let snapshotAnchor = SnapshotAnchor(capturing: self.sceneView) else {
-                fatalError("Failed to take snapshot")
-            }
-            map.anchors.append(snapshotAnchor)
-
-            do {
-                let data = try NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
-                try data.write(to: self.mapSaveURL, options: [.atomic])
-            } catch {
-                fatalError("Can't save map: \(error.localizedDescription)")
-            }
-
-            DispatchQueue.main.async {
-                self.loadExperienceButton.isHidden = false
-                self.loadExperienceButton.isEnabled = true
-            }
-        }
+        saveWorldMap()
     }
 
     @IBAction func loadExperience(_ sender: Any) {
+        let map = loadWorldMap()
+        let config = defaultConfiguration
+        config.initialWorldMap = map
 
+        if let snapshotAnchor = map.snapshotAnchor {
+            snapshotThumbnailImageView.image = UIImage(data: snapshotAnchor.imageData)
+        } else {
+            print("No snapshot image in saved world map")
+        }
+        map.anchors.removeAll(where: { $0 is SnapshotAnchor })
+
+        sceneView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
+        isRelocalizingMap = true
+        lineObjectAnchors.removeAll()
     }
 
     @IBAction func shareWorldMap(_ sender: Any) {
