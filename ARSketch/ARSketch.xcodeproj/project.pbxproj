@@ -55,9 +55,9 @@
 				93B5D78F21360C710053D6D0 /* ARSketch */,
 				93B5D78E21360C710053D6D0 /* Products */,
 			);
-			indentWidth = 2;
+			indentWidth = 4;
 			sourceTree = "<group>";
-			tabWidth = 2;
+			tabWidth = 4;
 		};
 		93B5D78E21360C710053D6D0 /* Products */ = {
 			isa = PBXGroup;
@@ -115,7 +115,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 1000;
-				ORGANIZATIONNAME = "Namrata Bandekar";
+				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					93B5D78C21360C710053D6D0 = {
 						CreatedOnToolsVersion = 10.0;

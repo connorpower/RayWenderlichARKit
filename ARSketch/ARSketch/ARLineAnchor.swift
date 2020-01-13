@@ -33,51 +33,67 @@ import ARKit
 import SceneKit
 
 class ARLineAnchor : ARAnchor {
-  
-  var sourcePoint : SCNVector3?
-  var destinationPoint : SCNVector3?
-  
-  override static var supportsSecureCoding: Bool {
-    get{
-      return true
+
+    // MARK: - Class Properties
+
+    override static var supportsSecureCoding: Bool { return true }
+
+    // MARK: - Properties
+
+    let sourcePoint : SCNVector3?
+    let destinationPoint : SCNVector3?
+
+    // MARK: - Initialization
+
+    init(name: String, transform: simd_float4x4, sourcePoint: SCNVector3?, destinationPoint: SCNVector3?) {
+        self.sourcePoint = sourcePoint
+        self.destinationPoint = destinationPoint
+
+        super.init(name: name, transform: transform)
     }
-  }
-  
-  enum CodingKeys: String {
-    case source = "source"
-    case destination = "destination"
-  }
-  
-  init(name: String, transform: simd_float4x4, sourcePoint: SCNVector3?, destinationPoint: SCNVector3?) {
-    super.init(name: name, transform: transform)
-    self.sourcePoint = sourcePoint
-    self.destinationPoint = destinationPoint
-  }
-  
-  required init(anchor: ARAnchor) {
-    super.init(anchor: anchor)
-    
-    let lineAnchor = anchor as? ARLineAnchor
-    self.sourcePoint = lineAnchor?.sourcePoint
-    self.destinationPoint = lineAnchor?.destinationPoint
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    
-    if let source: Point = aDecoder.decodeObject(of: Point.self, forKey: CodingKeys.source.rawValue) {
-      self.sourcePoint = SCNVector3.init(x: source.x, y: source.y, z: source.z)
+
+    required init(anchor: ARAnchor) {
+        let lineAnchor = anchor as? ARLineAnchor
+        self.sourcePoint = lineAnchor?.sourcePoint
+        self.destinationPoint = lineAnchor?.destinationPoint
+
+        super.init(anchor: anchor)
     }
-    
-    if let destination: Point = aDecoder.decodeObject(of: Point.self, forKey: CodingKeys.destination.rawValue) {
-      self.destinationPoint = SCNVector3(destination.x, destination.y, destination.z)
+
+    // MARK: - NSCoding
+
+    enum CodingKeys: String {
+        case source = "source"
+        case destination = "destination"
     }
-    
-  }
-  
-  override func encode(with aCoder: NSCoder) {
-    super.encode(with: aCoder)
-    aCoder.encode(Point(x: sourcePoint!.x, y: sourcePoint!.y, z: sourcePoint!.z), forKey: CodingKeys.source.rawValue)
-    aCoder.encode(Point(x: destinationPoint!.x, y: destinationPoint!.y, z: destinationPoint!.z), forKey: CodingKeys.destination.rawValue)
-  }
+
+    required init?(coder aDecoder: NSCoder) {
+        if let source: Point = aDecoder.decodeObject(of: Point.self, forKey: CodingKeys.source.rawValue) {
+            self.sourcePoint = SCNVector3.init(x: source.x, y: source.y, z: source.z)
+        } else {
+            self.sourcePoint = nil
+        }
+
+        if let destination: Point = aDecoder.decodeObject(of: Point.self, forKey: CodingKeys.destination.rawValue) {
+            self.destinationPoint = SCNVector3(destination.x, destination.y, destination.z)
+        } else {
+            self.destinationPoint = nil
+        }
+
+        super.init(coder: aDecoder)
+    }
+
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+
+        aCoder.encode(Point(x: sourcePoint!.x,
+                            y: sourcePoint!.y,
+                            z: sourcePoint!.z),
+                      forKey: CodingKeys.source.rawValue)
+        aCoder.encode(Point(x: destinationPoint!.x,
+                            y: destinationPoint!.y,
+                            z: destinationPoint!.z),
+                      forKey: CodingKeys.destination.rawValue)
+    }
+
 }

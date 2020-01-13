@@ -26,14 +26,14 @@ import SceneKit
  * Adds two SCNVector3 vectors and returns the result as a new SCNVector3.
  */
 func + (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
-  return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
+    return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
 }
 
 /*
  * Multiplies two SCNVector3 vectors and returns the result as a new SCNVector3.
  */
 func * (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
-  return SCNVector3Make(left.x * right.x, left.y * right.y, left.z * right.z)
+    return SCNVector3Make(left.x * right.x, left.y * right.y, left.z * right.z)
 }
 
 /*
@@ -41,11 +41,11 @@ func * (left: SCNVector3, right: SCNVector3) -> SCNVector3 {
  * returns the result as a new SCNVector3.
  */
 func * (vector: SCNVector3, scalar: Float) -> SCNVector3 {
-  return SCNVector3Make(vector.x * scalar, vector.y * scalar, vector.z * scalar)
+    return SCNVector3Make(vector.x * scalar, vector.y * scalar, vector.z * scalar)
 }
 
 func getNormalizedVector(_ vector: SCNVector3) -> SCNVector3 {
-  let vectorLength = sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z)
-  if vectorLength == 0 { return SCNVector3(0.0, 0.0, 0.0) }
-  return SCNVector3( vector.x / vectorLength, vector.y / vectorLength, vector.z / vectorLength)
+    let vectorLength = sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z)
+    if vectorLength == 0 { return SCNVector3(0.0, 0.0, 0.0) }
+    return SCNVector3( vector.x / vectorLength, vector.y / vectorLength, vector.z / vectorLength)
 }

@@ -31,37 +31,43 @@
 import Foundation
 
 class Point: NSObject, NSSecureCoding {
-  var x: Float
-  var y: Float
-  var z: Float
-  
-  public static var supportsSecureCoding: Bool {
-    get{
-      return true
+
+    // MARK: - Class Properties
+
+    public static var supportsSecureCoding: Bool { return true }
+
+    // MARK: - Properties
+
+    var x: Float
+    var y: Float
+    var z: Float
+
+    // MARK: - Initialization
+
+    public init(x: Float, y: Float, z: Float) {
+        self.x = x
+        self.y = y
+        self.z = z
     }
-  }
-  
-  public enum CodingKeys: String {
-    case x = "x"
-    case y = "y"
-    case z = "z"
-  }
-  
-  public init(x: Float, y: Float, z: Float) {
-    self.x = x
-    self.y = y
-    self.z = z
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    self.x = aDecoder.decodeFloat(forKey: CodingKeys.x.rawValue)
-    self.y = aDecoder.decodeFloat(forKey: CodingKeys.y.rawValue)
-    self.z = aDecoder.decodeFloat(forKey: CodingKeys.z.rawValue)
-  }
-  
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(self.x, forKey: CodingKeys.x.rawValue)
-    aCoder.encode(self.y, forKey: CodingKeys.y.rawValue)
-    aCoder.encode(self.z, forKey: CodingKeys.z.rawValue)
-  }
+
+    // MARK: - NSCoding
+
+    public enum CodingKeys: String {
+        case x = "x"
+        case y = "y"
+        case z = "z"
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        self.x = aDecoder.decodeFloat(forKey: CodingKeys.x.rawValue)
+        self.y = aDecoder.decodeFloat(forKey: CodingKeys.y.rawValue)
+        self.z = aDecoder.decodeFloat(forKey: CodingKeys.z.rawValue)
+    }
+
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(self.x, forKey: CodingKeys.x.rawValue)
+        aCoder.encode(self.y, forKey: CodingKeys.y.rawValue)
+        aCoder.encode(self.z, forKey: CodingKeys.z.rawValue)
+    }
+
 }

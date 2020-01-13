@@ -22,83 +22,83 @@ import simd
 import ARKit
 
 extension ARFrame.WorldMappingStatus: CustomStringConvertible {
-  public var description: String {
-    switch self {
-    case .notAvailable:
-      return "Not Available"
-    case .limited:
-      return "Limited"
-    case .extending:
-      return "Extending"
-    case .mapped:
-      return "Mapped"
-    @unknown default:
-      print("unknown case for ARFrame.WorldMappingStatus")
-      return "Unknown"
+    public var description: String {
+        switch self {
+        case .notAvailable:
+            return "Not Available"
+        case .limited:
+            return "Limited"
+        case .extending:
+            return "Extending"
+        case .mapped:
+            return "Mapped"
+        @unknown default:
+            print("unknown case for ARFrame.WorldMappingStatus")
+            return "Unknown"
+        }
     }
-  }
 }
 
 extension ARCamera.TrackingState: CustomStringConvertible {
-  public var description: String {
-    switch self {
-    case .normal:
-      return "Normal"
-    case .notAvailable:
-      return "Not Available"
-    case .limited(.initializing):
-      return "Initializing"
-    case .limited(.excessiveMotion):
-      return "Excessive Motion"
-    case .limited(.insufficientFeatures):
-      return "Insufficient Features"
-    case .limited(.relocalizing):
-      return "Relocalizing"
-    @unknown default:
-      print("unknown case for ARCamera.TrackingState")
-      return "Unknown"
+    public var description: String {
+        switch self {
+        case .normal:
+            return "Normal"
+        case .notAvailable:
+            return "Not Available"
+        case .limited(.initializing):
+            return "Initializing"
+        case .limited(.excessiveMotion):
+            return "Excessive Motion"
+        case .limited(.insufficientFeatures):
+            return "Insufficient Features"
+        case .limited(.relocalizing):
+            return "Relocalizing"
+        @unknown default:
+            print("unknown case for ARCamera.TrackingState")
+            return "Unknown"
+        }
     }
-  }
 }
 
 extension UIViewController {
-  func showAlert(title: String,
-                 message: String,
-                 buttonTitle: String = "OK",
-                 showCancel: Bool = false,
-                 buttonHandler: ((UIAlertAction) -> Void)? = nil) {
-    print(title + "\n" + message)
-    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    alertController.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: buttonHandler))
-    if showCancel {
-      alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+    func showAlert(title: String,
+                   message: String,
+                   buttonTitle: String = "OK",
+                   showCancel: Bool = false,
+                   buttonHandler: ((UIAlertAction) -> Void)? = nil) {
+        print(title + "\n" + message)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: buttonTitle, style: .default, handler: buttonHandler))
+        if showCancel {
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        }
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
-    DispatchQueue.main.async {
-      self.present(alertController, animated: true, completion: nil)
-    }
-  }
 }
 
 extension CGImagePropertyOrientation {
-  /// Preferred image presentation orientation respecting the native sensor orientation of iOS device camera.
-  init(cameraOrientation: UIDeviceOrientation) {
-    switch cameraOrientation {
-    case .portrait:
-      self = .right
-    case .portraitUpsideDown:
-      self = .left
-    case .landscapeLeft:
-      self = .up
-    case .landscapeRight:
-      self = .down
-    default:
-      self = .right
+    /// Preferred image presentation orientation respecting the native sensor orientation of iOS device camera.
+    init(cameraOrientation: UIDeviceOrientation) {
+        switch cameraOrientation {
+        case .portrait:
+            self = .right
+        case .portraitUpsideDown:
+            self = .left
+        case .landscapeLeft:
+            self = .up
+        case .landscapeRight:
+            self = .down
+        default:
+            self = .right
+        }
     }
-  }
 }
 
 extension ARWorldMap {
-  var snapshotAnchor: SnapshotAnchor? {
-    return anchors.compactMap { $0 as? SnapshotAnchor }.first
-  }
+    var snapshotAnchor: SnapshotAnchor? {
+        return anchors.compactMap { $0 as? SnapshotAnchor }.first
+    }
 }

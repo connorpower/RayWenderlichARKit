@@ -31,29 +31,35 @@
 import SceneKit
 
 class SCNLineNode: SCNNode {
-  
-  init(from startPoint: SCNVector3, to endPoint: SCNVector3, radius: CGFloat, color: UIColor) {
-    super.init()
-    let lineVector = SCNVector3(x: endPoint.x-startPoint.x,
-                                y: endPoint.y-startPoint.y,
-                                z: endPoint.z-startPoint.z)
-    let distanceBetweenPoints = CGFloat(sqrt(lineVector.x * lineVector.x + lineVector.y * lineVector.y + lineVector.z * lineVector.z))
-    
-    if distanceBetweenPoints == 0.0 {
-      // two points together.
-      let sphere = SCNSphere(radius: radius)
-      sphere.firstMaterial?.diffuse.contents = color
-      self.geometry = sphere
-      self.position = startPoint
-      return
+
+    // MARK: - Initialization
+
+    init(from startPoint: SCNVector3, to endPoint: SCNVector3, radius: CGFloat, color: UIColor) {
+        super.init()
+        let lineVector = SCNVector3(x: endPoint.x - startPoint.x,
+                                    y: endPoint.y - startPoint.y,
+                                    z: endPoint.z - startPoint.z)
+        let distanceBetweenPoints = CGFloat(sqrt(
+            lineVector.x * lineVector.x +
+            lineVector.y * lineVector.y +
+            lineVector.z * lineVector.z))
+
+        if distanceBetweenPoints == 0.0 {
+            // two points together.
+            let sphere = SCNSphere(radius: radius)
+            sphere.firstMaterial?.diffuse.contents = color
+            self.geometry = sphere
+            self.position = startPoint
+            return
+        }
+
+        let cylinder = SCNCylinder(radius: radius, height: distanceBetweenPoints)
+        cylinder.firstMaterial?.diffuse.contents = color
+        self.geometry = cylinder
     }
-    
-    let cylinder = SCNCylinder(radius: radius, height: distanceBetweenPoints)
-    cylinder.firstMaterial?.diffuse.contents = color
-    self.geometry = cylinder
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    super.init()
-  }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init()
+    }
+
 }

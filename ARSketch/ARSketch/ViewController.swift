@@ -33,135 +33,154 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController {
-  
-  @IBOutlet weak var sceneView: ARSCNView!
-  @IBOutlet weak var sketchButton: UIButton!
-  
-  @IBOutlet weak var mappingStatusLabel: UILabel!
-  @IBOutlet weak var sessionInfoView: UIVisualEffectView!
-  @IBOutlet weak var sessionInfoLabel: UILabel!
-  
-  @IBOutlet weak var saveExperienceButton: StatusControlledButton!
-  @IBOutlet weak var loadExperienceButton: StatusControlledButton!
-  
-  @IBOutlet weak var snapshotThumbnailImageView: UIImageView!
-  @IBOutlet weak var resetSceneButton: UIButton!
-  @IBOutlet weak var shareButton: UIButton!
-  
-  fileprivate var previousPoint: SCNVector3?
-  let lineColor = UIColor.white
-  
-  var isSketchButtonPressed = false
-  var viewCenter: CGPoint?
-  
-  var defaultConfiguration: ARWorldTrackingConfiguration {
-    let configuration = ARWorldTrackingConfiguration()
-    configuration.planeDetection = .horizontal
-    configuration.environmentTexturing = .automatic
-    return configuration
-  }
-  
-  // MARK: - View Life Cycle
-  
-  // Lock the orientation of the app to the orientation in which it is launched
-  override var shouldAutorotate: Bool {
-    return false
-  }
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    let viewBounds = self.view.bounds
-    viewCenter = CGPoint(x: viewBounds.width / 2.0, y: viewBounds.height / 2.0)
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    sceneView.delegate = self
-    
-    sceneView.session.delegate = self
-    sceneView.session.run(defaultConfiguration)
-    
-    // Prevent the screen from being dimmed after a while as users will likely
-    // have long periods of interaction without touching the screen or buttons.
-    UIApplication.shared.isIdleTimerDisabled = true
-    
-    //hide buttons
-    saveExperienceButton.isHidden = true
-    loadExperienceButton.isHidden = true
-  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    
-    // Pause the view's session
-    sceneView.session.pause()
-  }
-  
-  // MARK: - Place AR content
-  func addLineObject(sourcePoint: SCNVector3, destinationPoint: SCNVector3) {
-    let lineNode = SCNLineNode(from: sourcePoint, to: destinationPoint, radius: 0.02, color: lineColor)
-    guard let hitTestResult = sceneView
-      .hitTest(self.viewCenter!, types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
-      .first
-      else { return }
-    lineNode.transform = SCNMatrix4(hitTestResult.worldTransform)
-    sceneView.scene.rootNode.addChildNode(lineNode)
-  }
+
+    // MARK: - IBOutlets
+
+    @IBOutlet private weak var sceneView: ARSCNView!
+    @IBOutlet private weak var sketchButton: UIButton!
+
+    @IBOutlet private weak var mappingStatusLabel: UILabel!
+    @IBOutlet private weak var sessionInfoView: UIVisualEffectView!
+    @IBOutlet private weak var sessionInfoLabel: UILabel!
+
+    @IBOutlet private weak var saveExperienceButton: StatusControlledButton!
+    @IBOutlet private weak var loadExperienceButton: StatusControlledButton!
+
+    @IBOutlet private weak var snapshotThumbnailImageView: UIImageView!
+    @IBOutlet private weak var resetSceneButton: UIButton!
+    @IBOutlet private weak var shareButton: UIButton!
+
+    // MARK: - Properties
+
+    fileprivate var previousPoint: SCNVector3?
+    private let lineColor = UIColor.white
+
+    private var isSketchButtonPressed = false
+    private var viewCenter: CGPoint?
+
+    private var defaultConfiguration: ARWorldTrackingConfiguration {
+        let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
+        configuration.environmentTexturing = .automatic
+        return configuration
+    }
+
+    // MARK: - View Life Cycle
+
+    // Lock the orientation of the app to the orientation in which it is launched
+    override var shouldAutorotate: Bool { return false }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let viewBounds = self.view.bounds
+        viewCenter = CGPoint(x: viewBounds.width / 2.0, y: viewBounds.height / 2.0)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        sceneView.delegate = self
+
+        sceneView.session.delegate = self
+        sceneView.session.run(defaultConfiguration)
+
+        // Prevent the screen from being dimmed after a while as users will likely
+        // have long periods of interaction without touching the screen or buttons.
+        UIApplication.shared.isIdleTimerDisabled = true
+
+        //hide buttons
+        saveExperienceButton.isHidden = true
+        loadExperienceButton.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // Pause the view's session
+        sceneView.session.pause()
+    }
+
+    // MARK: - Place AR content
+
+    private func addLineObject(sourcePoint: SCNVector3, destinationPoint: SCNVector3) {
+        let lineNode = SCNLineNode(from: sourcePoint, to: destinationPoint, radius: 0.02, color: lineColor)
+        guard let hitTestResult = sceneView
+            .hitTest(self.viewCenter!, types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane])
+            .first
+            else { return }
+        lineNode.transform = SCNMatrix4(hitTestResult.worldTransform)
+        sceneView.scene.rootNode.addChildNode(lineNode)
+    }
+
 }
 
 // MARK: - ARSCNViewDelegate
+
 extension ViewController: ARSCNViewDelegate {
-  func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-    DispatchQueue.main.async {
-      self.isSketchButtonPressed = self.sketchButton.isHighlighted
+
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        DispatchQueue.main.async {
+            self.isSketchButtonPressed = self.sketchButton.isHighlighted
+        }
     }
-  }
-  
-  func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
-    guard let pointOfView = sceneView.pointOfView else { return }
-    let transform = pointOfView.transform
-    let direction = SCNVector3(-1 * transform.m31, -1 * transform.m32, -1 * transform.m33)
-    let currentPoint = pointOfView.position + (direction * 0.1)
-    if isSketchButtonPressed {
-      if let previousPoint = previousPoint {
-        addLineObject(sourcePoint: previousPoint, destinationPoint: currentPoint)
-      }
+
+    func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
+        guard let pointOfView = sceneView.pointOfView else { return }
+
+        let transform = pointOfView.transform
+        let direction = SCNVector3(-1 * transform.m31, -1 * transform.m32, -1 * transform.m33)
+        let currentPoint = pointOfView.position + (direction * 0.1)
+
+        if isSketchButtonPressed {
+            if let previousPoint = previousPoint {
+                addLineObject(sourcePoint: previousPoint, destinationPoint: currentPoint)
+            }
+        }
+        previousPoint = currentPoint
     }
-    previousPoint = currentPoint
-  }
+
 }
 
 // MARK: - AR session management
+
 extension ViewController: ARSessionDelegate {
-  func sessionWasInterrupted(_ session: ARSession) {
-    // Inform the user that the session has been interrupted, for example, by presenting an overlay.
-    sessionInfoLabel.text = "Session was interrupted"
-  }
-  
-  func sessionInterruptionEnded(_ session: ARSession) {
-    // Reset tracking and/or remove existing anchors if consistent tracking is required.
-    sessionInfoLabel.text = "Session interruption ended"
-  }
-  
-  func session(_ session: ARSession, didFailWithError error: Error) {
-    // Present an error message to the user.
-    sessionInfoLabel.text = "Session failed: \(error.localizedDescription)"
-  }
+
+    func sessionWasInterrupted(_ session: ARSession) {
+        // Inform the user that the session has been interrupted, for example, by presenting an overlay.
+        sessionInfoLabel.text = "Session was interrupted"
+    }
+
+    func sessionInterruptionEnded(_ session: ARSession) {
+        // Reset tracking and/or remove existing anchors if consistent tracking is required.
+        sessionInfoLabel.text = "Session interruption ended"
+    }
+
+    func session(_ session: ARSession, didFailWithError error: Error) {
+        // Present an error message to the user.
+        sessionInfoLabel.text = "Session failed: \(error.localizedDescription)"
+    }
+
 }
 
 // MARK: - Persistent AR
+
 extension ViewController {
-  @IBAction func resetTracking(_ sender: UIButton?) {
-  }
-  
-  @IBAction func saveExperience(_ sender: UIButton) {
-  }
-  
-  @IBAction func loadExperience(_ sender: Any) {
-  }
-  
-  
-  @IBAction func shareWorldMap(_ sender: Any) {
-  }
+
+    @IBAction func resetTracking(_ sender: UIButton?) {
+
+    }
+
+    @IBAction func saveExperience(_ sender: UIButton) {
+
+    }
+
+    @IBAction func loadExperience(_ sender: Any) {
+
+    }
+
+    @IBAction func shareWorldMap(_ sender: Any) {
+
+    }
+
 }
