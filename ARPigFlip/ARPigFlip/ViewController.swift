@@ -20,8 +20,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let boxAnchor = try! Experience.loadBox()
-        arView.scene.anchors.append(boxAnchor)
+        let pigAnchor = try! Experience.loadPig()
+        arView.scene.anchors.append(pigAnchor)
     }
 
 }
