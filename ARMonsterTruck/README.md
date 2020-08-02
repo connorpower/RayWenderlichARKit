@@ -14,5 +14,4 @@ SceneKit (not the newer RealityKit).
 
 ## Example
 
-// TODO: screenshot
-
+<img src="https://user-images.githubusercontent.com/779056/89118823-f7a73900-d4fc-11ea-8865-5ba65c2ffd77.jpeg" width="600px" />
