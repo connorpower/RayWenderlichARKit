@@ -244,7 +244,7 @@ class ViewController: UIViewController {
 
     private func createFloorNode() -> SCNNode {
         let floorGeometry = SCNFloor()
-        floorGeometry.reflectivity = 0.0
+        floorGeometry.reflectivity = 0.25
 
         let floorMaterial = SCNMaterial()
         floorMaterial.diffuse.contents = UIColor.white
