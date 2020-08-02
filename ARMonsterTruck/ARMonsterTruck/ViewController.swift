@@ -29,6 +29,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import CoreMotion
 
 // MARK: - Game State
 
@@ -40,6 +41,27 @@ enum GameState: Int16 {
 
 class ViewController: UIViewController {
 
+    // MARK: - Constants
+
+    private struct WheelPhysics {
+        static let wheelRadius: CGFloat = 0.04
+        static let wheelFrictionSlip: CGFloat = 0.9
+        static let suspensionMaxTravel: CGFloat = 4.0
+        static let suspensionMaxForce: CGFloat = 100
+        static let suspensionRestLength: CGFloat = 0.08
+        static let suspensionDamping: CGFloat = 2.0
+        static let suspensionStiffness: CGFloat = 2.0
+        static let suspensionCompression: CGFloat = 4.0
+    }
+
+    private struct SpeedConstants {
+        static let defaultEngineForce: CGFloat = 10.0
+        static let defaultBrakingForce: CGFloat = 0.1
+        static let maximumSpeed: CGFloat = 2.0
+        static let steeringClamp: CGFloat = 0.6
+
+    }
+
     // MARK: - Properties
 
     override var prefersStatusBarHidden: Bool { return true }
@@ -50,6 +72,23 @@ class ViewController: UIViewController {
     private var gameState: GameState = .detectSurface
     private var focusPoint:CGPoint!
     private var focusNode: SCNNode!
+
+    private var truckNode: SCNNode!
+    private var wheelFLNode: SCNNode!
+    private var wheelFRNode: SCNNode!
+    private var wheelRLNode: SCNNode!
+    private var wheelRRNode: SCNNode!
+
+    private var physicsVehicle: SCNPhysicsVehicle!
+
+    private var groundNode: SCNNode!
+
+    private var isThrottling = false
+    private var engineForce: CGFloat = 0.0
+    private var brakingForce: CGFloat = 0.0
+
+    private var motionManager = CMMotionManager()
+    private var steeringAngle: CGFloat = 0.0
 
     // MARK: Outlets
 
@@ -89,8 +128,8 @@ class ViewController: UIViewController {
 
     func initScene() {
         let scene = SCNScene()
-        //scene.lightingEnvironment.contents = "MonsterTruck.scnassets/Textures/Environment_CUBE.jpg"
-        //scene.lightingEnvironment.intensity = 4
+        scene.lightingEnvironment.contents = "MonsterTruck.scnassets/Textures/Environment_CUBE.jpg"
+        scene.lightingEnvironment.intensity = 4
         scene.physicsWorld.speed = 1
         //scene.physicsWorld.timeStep = 1.0 / 60.0 // Physics Precision
         scene.isPaused = false
@@ -169,6 +208,74 @@ class ViewController: UIViewController {
         }
     }
 
+    private func createPhyscisVehicleWheel(wheelNode: SCNNode, postion: SCNVector3) -> SCNPhysicsVehicleWheel {
+        let wheel = SCNPhysicsVehicleWheel(node: wheelNode)
+        wheel.connectionPosition = postion
+        wheel.axle = SCNVector3(x: -1.0, y: 0.0, z: 0.0)
+        wheel.radius = WheelPhysics.wheelRadius
+        wheel.frictionSlip = WheelPhysics.wheelFrictionSlip
+        wheel.maximumSuspensionTravel = WheelPhysics.suspensionMaxTravel
+        wheel.maximumSuspensionForce = WheelPhysics.suspensionMaxForce
+        wheel.suspensionRestLength = WheelPhysics.suspensionRestLength
+        wheel.suspensionDamping = WheelPhysics.suspensionDamping
+        wheel.suspensionStiffness = WheelPhysics.suspensionStiffness
+        wheel.suspensionCompression = WheelPhysics.suspensionCompression
+        return wheel
+    }
+
+    private func createVehiclePhsics() {
+        if physicsVehicle != nil {
+            sceneView.scene.physicsWorld.removeBehavior(physicsVehicle)
+        }
+
+        let wheelFL = createPhyscisVehicleWheel(wheelNode: wheelFLNode!,
+                                                postion: SCNVector3(x: -0.07, y: +0.04, z: +0.06))
+        let wheelFR = createPhyscisVehicleWheel(wheelNode: wheelFRNode!,
+                                                postion: SCNVector3(x: +0.07, y: +0.04, z: +0.06))
+        let wheelRL = createPhyscisVehicleWheel(wheelNode: wheelRLNode!,
+                                                postion: SCNVector3(x: -0.07, y: +0.04, z: -0.06))
+        let wheelRR = createPhyscisVehicleWheel(wheelNode: wheelRRNode!,
+                                                postion: SCNVector3(x: +0.07, y: +0.04, z: -0.06))
+
+        physicsVehicle = SCNPhysicsVehicle(chassisBody: truckNode.physicsBody!,
+                                           wheels: [wheelFL, wheelFR, wheelRL, wheelRR])
+        sceneView.scene.physicsWorld.addBehavior(physicsVehicle)
+    }
+
+    private func createFloorNode() -> SCNNode {
+        let floorGeometry = SCNFloor()
+        floorGeometry.reflectivity = 0.0
+
+        let floorMaterial = SCNMaterial()
+        floorMaterial.diffuse.contents = UIColor.white
+        floorMaterial.blendMode = .multiply
+        floorGeometry.materials = [floorMaterial]
+
+        let floorNode = SCNNode(geometry: floorGeometry)
+        floorNode.position = SCNVector3Zero
+        floorNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+        floorNode.physicsBody?.restitution = 0.5
+        floorNode.physicsBody?.friction = 4.0
+        floorNode.physicsBody?.rollingFriction = 0.0
+
+        return floorNode
+    }
+
+    private func startAccelerometer() {
+        guard motionManager.isAccelerometerAvailable else {
+            return
+        }
+
+        motionManager.accelerometerUpdateInterval = 1.0/60.0
+        motionManager.startAccelerometerUpdates(to: OperationQueue.main) { (accelerometerData, error) in
+            self.updateSteeringAngle(acceleration: accelerometerData!.acceleration)
+        }
+    }
+
+    private func stopAccelerometer() {
+        motionManager.stopAccelerometerUpdates()
+    }
+
     // MARK: Update Functions
 
     private func updateStatus() {
@@ -205,14 +312,94 @@ class ViewController: UIViewController {
         }
     }
 
+    private func updatePositions() {
+        truckNode.position = focusNode.position
+        truckNode.position.y += 0.20
+
+        truckNode.physicsBody?.velocity = SCNVector3Zero
+        truckNode.physicsBody?.angularVelocity = SCNVector4Zero
+
+        truckNode.physicsBody?.resetTransform()
+
+        groundNode.position = focusNode.position
+        groundNode.physicsBody?.resetTransform()
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isThrottling = true
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isThrottling = false
+    }
+
+    private func updateVehiclePhysics() {
+        guard gameState == .playGame else {
+            return
+        }
+
+        if isThrottling {
+            engineForce = SpeedConstants.defaultEngineForce
+            brakingForce = 0.0
+        } else {
+            engineForce = 0.0
+            brakingForce = SpeedConstants.defaultBrakingForce
+        }
+
+        if physicsVehicle.speedInKilometersPerHour > SpeedConstants.maximumSpeed {
+            engineForce = 0.0
+        }
+
+        physicsVehicle.applyEngineForce(engineForce, forWheelAt: 0)
+        physicsVehicle.applyEngineForce(engineForce, forWheelAt: 1)
+        physicsVehicle.applyEngineForce(engineForce, forWheelAt: 2)
+        physicsVehicle.applyEngineForce(engineForce, forWheelAt: 3)
+
+        physicsVehicle.applyBrakingForce(brakingForce, forWheelAt: 0)
+        physicsVehicle.applyBrakingForce(brakingForce, forWheelAt: 1)
+        physicsVehicle.applyBrakingForce(brakingForce, forWheelAt: 2)
+        physicsVehicle.applyBrakingForce(brakingForce, forWheelAt: 3)
+
+        physicsVehicle.setSteeringAngle(steeringAngle, forWheelAt: 0)
+        physicsVehicle.setSteeringAngle(steeringAngle, forWheelAt: 1)
+    }
+
+    private func updateSteeringAngle(acceleration: CMAcceleration) {
+        steeringAngle = (CGFloat)(acceleration.y)
+
+        if steeringAngle < -SpeedConstants.steeringClamp {
+            steeringAngle = -SpeedConstants.steeringClamp
+        } else if steeringAngle > SpeedConstants.steeringClamp {
+            steeringAngle = SpeedConstants.steeringClamp
+        }
+    }
+
     // MARK: Game Management
 
     private func startGame() {
+        guard self.gameState == .hitStartToPlay else {
+            return
+        }
 
+        DispatchQueue.main.async {
+            self.createVehiclePhsics()
+            self.updatePositions()
+            self.startAccelerometer()
+            self.truckNode.isHidden = false
+            self.groundNode.isHidden = false
+            self.gameState = .playGame
+        }
     }
 
     private func resetGame(){
+        guard gameState == .playGame else { return }
 
+        DispatchQueue.main.async {
+            self.truckNode.isHidden = true
+            self.groundNode.isHidden = true
+            self.stopAccelerometer()
+            self.gameState = .detectSurface
+        }
     }
 
     private func loadModels() {
@@ -221,6 +408,26 @@ class ViewController: UIViewController {
         focusNode = focusScene.rootNode.childNode(withName: "Focus", recursively: false)
         focusNode.isHidden = true
         sceneView.scene.rootNode.addChildNode(focusNode)
+
+        // Load Truck
+        let truckScene = SCNScene(named: "MonsterTruck.scnassets/Models/MonsterTruck.scn")!
+        truckNode = truckScene.rootNode.childNode(withName: "Truck", recursively: true)
+        wheelFLNode = truckScene.rootNode.childNode(withName: "Wheel_FL", recursively: true)
+        wheelFRNode = truckScene.rootNode.childNode(withName: "Wheel_FR", recursively: true)
+        wheelRLNode = truckScene.rootNode.childNode(withName: "Wheel_RL", recursively: true)
+        wheelRRNode = truckScene.rootNode.childNode(withName: "Wheel_RR", recursively: true)
+
+        truckNode.addChildNode(wheelFLNode!)
+        truckNode.addChildNode(wheelFRNode!)
+        truckNode.addChildNode(wheelRLNode!)
+        truckNode.addChildNode(wheelRRNode!)
+
+        truckNode.isHidden = true
+        sceneView.scene.rootNode.addChildNode(truckNode)
+
+        groundNode = createFloorNode()
+        groundNode.isHidden = true
+        sceneView.scene.rootNode.addChildNode(groundNode)
     }
 
 }
@@ -235,6 +442,7 @@ extension ViewController : ARSCNViewDelegate {
         DispatchQueue.main.async {
             self.updateStatus()
             self.updateFocusNode()
+            self.updateVehiclePhysics()
         }
     }
 
