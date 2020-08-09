@@ -31,6 +31,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import MultipeerConnectivity
 
 class ViewController: UIViewController {
 
@@ -51,6 +52,9 @@ class ViewController: UIViewController {
     @IBOutlet private weak var shareButton: UIButton!
 
     // MARK: - Properties
+
+    private var peerSession: PeerSession!
+    private var mapProvider: MCPeerID?
 
     private var previousPoint: SCNVector3?
     private let lineColor = UIColor.white
@@ -95,6 +99,8 @@ class ViewController: UIViewController {
         let viewBounds = self.view.bounds
         viewCenter = CGPoint(x: viewBounds.width / 2.0, y: viewBounds.height / 2.0)
         loadExperienceButton.isEnabled = (mapDataFromFile != nil)
+
+        peerSession = PeerSession(receivedDataHandler: handleReceivedData)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -134,6 +140,10 @@ class ViewController: UIViewController {
 
         lineObjectAnchors.append(lineAnchor)
         sceneView.session.add(anchor: lineAnchor)
+
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: lineAnchor, requiringSecureCoding: true) {
+            self.peerSession.sendToAllPeers(data)
+        }
     }
 
     // MARK: - Save & Load World Maps
@@ -184,21 +194,31 @@ class ViewController: UIViewController {
         snapshotThumbnailImageView.isHidden = true
 
         switch (trackingState, frame.worldMappingStatus) {
-        case (.normal, .mapped),
-             (.normal, .extending):
+        case (.normal, .mapped), (.normal, .extending):
             if frame.anchors.contains(where: { $0.name == "virtualObject0" }) {
                 message = "Tap 'Save Experience' to save the current map."
-
             } else {
-                message = "Hold 'Sketch' to draw something."
+                message = "Tap Sketch to draw on screen."
             }
-        case (.normal, _) where mapDataFromFile != nil && !isRelocalizingMap:
-            message = "Tap 'Load Experience' to load a saved experience."
-        case (.normal, _) where mapDataFromFile == nil:
-            message = "Move around to map the environment."
+        case (.normal, _) where (mapDataFromFile != nil && !isRelocalizingMap):
+            message = """
+            Move around to map the environment,
+            or tap 'Load Experience' to load a saved experience.
+            """
+        case (.normal, _) where mapDataFromFile == nil || (frame.anchors.isEmpty && peerSession.connectedPeers.isEmpty):
+            message = """
+            Move around to map the environment,
+            or wait to join a shared session.
+            """
+        case (.normal, _) where !peerSession.connectedPeers.isEmpty && mapProvider == nil:
+            let peerNames = peerSession.connectedPeers.map({ $0.displayName }).joined(separator: ",")
+            message = "Connected with \(peerNames)."
         case (.limited(.relocalizing), _) where isRelocalizingMap:
             message = "Move your device to the location shown in the image."
             snapshotThumbnailImageView.isHidden = false
+        case (.limited(.initializing), _) where mapProvider != nil,
+             (.limited(.relocalizing), _) where mapProvider != nil:
+            message = "Received map from \(mapProvider!.displayName)."
         default:
             message = trackingState.localizedFeedback
         }
@@ -315,23 +335,87 @@ extension ViewController {
 
     @IBAction func loadExperience(_ sender: Any) {
         let map = loadWorldMap()
-        let config = defaultConfiguration
-        config.initialWorldMap = map
-
-        if let snapshotAnchor = map.snapshotAnchor {
-            snapshotThumbnailImageView.image = UIImage(data: snapshotAnchor.imageData)
-        } else {
-            print("No snapshot image in saved world map")
-        }
-        map.anchors.removeAll(where: { $0 is SnapshotAnchor })
-
-        sceneView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
-        isRelocalizingMap = true
-        lineObjectAnchors.removeAll()
+        displaySnapshotImage(from: map)
+        configureARSession(for: map)
     }
 
     @IBAction func shareWorldMap(_ sender: Any) {
+        let mcBrowserVC = MCBrowserViewController(serviceType: PeerSession.serviceType,
+                                                  session: peerSession.mcSession)
+        mcBrowserVC.delegate = self
+        present(mcBrowserVC, animated: true, completion: nil)
+    }
 
+}
+
+extension ViewController: MCBrowserViewControllerDelegate {
+
+    func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController) {
+        sceneView.session.getCurrentWorldMap { worldMap, error in
+            guard let map = worldMap else {
+                print("Error: \(error!.localizedDescription)")
+                return
+            }
+            guard let snapshotAnchor = SnapshotAnchor(capturing: self.sceneView) else {
+                fatalError("Can't take snapshot")
+            }
+            map.anchors.append(snapshotAnchor)
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true) else {
+                fatalError("can't encode map")
+            }
+            self.peerSession.sendToAllPeers(data)
+        }
+        browserViewController.dismiss(animated: true, completion: nil)
+    }
+
+    func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController) {
+        browserViewController.dismiss(animated: true, completion: nil)
+    }
+
+}
+
+extension ViewController {
+
+    func handleReceivedData(_ data: Data, from peer: MCPeerID) {
+        do {
+            if let worldMap = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data) {
+                DispatchQueue.main.async {
+                    self.displaySnapshotImage(from: worldMap)
+                }
+                configureARSession(for: worldMap)
+                mapProvider = peer
+                return
+            }
+        } catch {
+            print("can't decode data received from \(peer)")
+        }
+
+        if !isRelocalizingMap {
+            do {
+                if let anchor = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARLineAnchor.self, from: data) {
+                    sceneView.session.add(anchor: anchor)
+                }
+            } catch {
+                print("unknown data received from \(peer)")
+            }
+        }
+    }
+
+    func displaySnapshotImage(from worldMap: ARWorldMap) {
+        if let snapshotData = worldMap.snapshotAnchor?.imageData, let snapshot = UIImage(data: snapshotData) {
+            self.snapshotThumbnailImageView.image = snapshot
+        } else {
+            print("No snapshot image in world map")
+        }
+        worldMap.anchors.removeAll(where: { $0 is SnapshotAnchor })
+    }
+
+    func configureARSession(for worldMap: ARWorldMap) {
+        let configuration = self.defaultConfiguration
+        configuration.initialWorldMap = worldMap
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        isRelocalizingMap = true
+        lineObjectAnchors.removeAll()
     }
 
 }
