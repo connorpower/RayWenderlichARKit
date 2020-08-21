@@ -30,49 +30,37 @@ import UIKit
 import ARKit
 
 class RubikViewController : UIViewController, ARSessionDelegate {
-  @IBOutlet var sceneView: ARSCNView!
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    // Set the view's delegate
-    sceneView.delegate = self
-    
-    // Set the session's delegate
-    sceneView.session.delegate = self
-    
-    // Show statistics such as fps and timing information
-    sceneView.showsStatistics = true
-    
-    // Create a new scene
-    let scene = SCNScene()
-    
-    // Set the scene to the view
-    sceneView.scene = scene
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
+    @IBOutlet var sceneView: ARSCNView!
 
-    // World tracking
-    let configuration = ARWorldTrackingConfiguration()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        sceneView.delegate = self
+        sceneView.session.delegate = self
+        sceneView.showsStatistics = true
+        let scene = SCNScene()
+        sceneView.scene = scene
+    }
 
-    sceneView.session.run(configuration)
-  }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        let configuration = ARWorldTrackingConfiguration()
+        sceneView.session.run(configuration)
+    }
 
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    
-    // Pause the view's session
-    sceneView.session.pause()
-  }
-}
-
-extension RubikViewController : ARSCNViewDelegate {
-  func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-    return nil
-  }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        sceneView.session.pause()
+    }
 }
 
 extension RubikViewController {
+    
+}
+
+// MARK: - ARSCNViewDelegate
+
+extension RubikViewController : ARSCNViewDelegate {
+    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        return nil
+    }
 }
