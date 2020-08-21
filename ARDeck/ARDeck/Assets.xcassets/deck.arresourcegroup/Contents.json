@@ -1,0 +1,47 @@
+{
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "resources" : [
+    {
+      "filename" : "club2.arreferenceimage"
+    },
+    {
+      "filename" : "club3.arreferenceimage"
+    },
+    {
+      "filename" : "club4.arreferenceimage"
+    },
+    {
+      "filename" : "club5.arreferenceimage"
+    },
+    {
+      "filename" : "club6.arreferenceimage"
+    },
+    {
+      "filename" : "club7.arreferenceimage"
+    },
+    {
+      "filename" : "club8.arreferenceimage"
+    },
+    {
+      "filename" : "club9.arreferenceimage"
+    },
+    {
+      "filename" : "club10.arreferenceimage"
+    },
+    {
+      "filename" : "clubAce.arreferenceimage"
+    },
+    {
+      "filename" : "clubJack.arreferenceimage"
+    },
+    {
+      "filename" : "clubKing.arreferenceimage"
+    },
+    {
+      "filename" : "clubQueen.arreferenceimage"
+    }
+  ]
+}
