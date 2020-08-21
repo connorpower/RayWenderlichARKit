@@ -60,8 +60,11 @@ class DeckViewController : UIViewController, ARSessionDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let configuration = ARWorldTrackingConfiguration()
+        let configuration = ARImageTrackingConfiguration()
         configuration.maximumNumberOfTrackedImages = 1
+
+        let triggerImages = ARReferenceImage.referenceImages(inGroupNamed: "deck", bundle: nil)!
+        configuration.trackingImages = triggerImages
 
         sceneView.session.run(configuration)
     }
@@ -73,6 +76,20 @@ class DeckViewController : UIViewController, ARSessionDelegate {
 }
 
 extension DeckViewController {
+    func createCardOverlayNode(for anchor: ARImageAnchor) -> SCNNode {
+        let box = SCNBox(width: anchor.referenceImage.physicalSize.width,
+                         height: 0.0001,
+                         length: anchor.referenceImage.physicalSize.height,
+                         chamferRadius: 0)
+
+        if let material = box.firstMaterial {
+            material.diffuse.contents = UIColor.red
+            material.transparency = 0.3
+        }
+
+        return SCNNode(geometry: box)
+    }
+
     func createInfoPanelNode(for anchor: ARImageAnchor) -> SCNNode {
         let cardName = anchor.referenceImage.name ?? "Unknown card"
 
@@ -127,6 +144,15 @@ extension DeckViewController {
 
 extension DeckViewController : ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        if let imageAnchor = anchor as? ARImageAnchor {
+            let overlayNode = createCardOverlayNode(for: imageAnchor)
+
+            let infoPanelNode = createInfoPanelNode(for: imageAnchor)
+            overlayNode.addChildNode(infoPanelNode)
+
+            return overlayNode
+        }
+
         return nil
     }
 }
