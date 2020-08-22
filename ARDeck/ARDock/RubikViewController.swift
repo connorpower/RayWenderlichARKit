@@ -44,6 +44,10 @@ class RubikViewController : UIViewController, ARSessionDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let configuration = ARWorldTrackingConfiguration()
+
+        let models = ARReferenceObject.referenceObjects(inGroupNamed: "models", bundle: nil)!
+        configuration.detectionObjects = models
+
         sceneView.session.run(configuration)
     }
 
@@ -54,13 +58,48 @@ class RubikViewController : UIViewController, ARSessionDelegate {
 }
 
 extension RubikViewController {
-    
+
+    func createOverlayNode(for anchor: ARObjectAnchor) -> SCNNode {
+        let object = anchor.referenceObject
+
+        let box = SCNBox(width: CGFloat(object.extent.x),
+                         height: CGFloat(object.extent.y),
+                         length: CGFloat(object.extent.z),
+                         chamferRadius: 0)
+
+        let materials: [SCNMaterial] = [
+            UIColor.red,
+            UIColor.yellow,
+            UIColor.orange,
+            UIColor.white,
+            UIColor.blue,
+            UIColor.green
+            ].map(createMaterial)
+
+        box.materials = materials
+
+        return SCNNode(geometry: box)
+    }
+
+    func createMaterial(with color: UIColor) -> SCNMaterial {
+        let material = SCNMaterial()
+        material.diffuse.contents = color
+        material.transparency = 0.5
+
+        return material
+    }
+
 }
 
 // MARK: - ARSCNViewDelegate
 
 extension RubikViewController : ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        if let anchor = anchor as? ARObjectAnchor {
+            print("Found 3D object: \(anchor.referenceObject.name!)")
+            return createOverlayNode(for: anchor)
+        }
+
         return nil
     }
 }
